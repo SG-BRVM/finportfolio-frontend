@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Variables sémantiques shadcn/Radix, alignées sur la palette
+       brand/ink existante (voir tailwind.config.js) plutôt que sur les
+       tokens shadcn par défaut - pour que les primitives Radix ajoutées
+       se fondent dans l'identité visuelle déjà en place. */
+    --background: 0 0% 100%;
+    --foreground: 222 16% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 16% 20%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 16% 20%;
+    --primary: 229 78% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 20% 96%;
+    --secondary-foreground: 222 16% 20%;
+    --muted: 220 20% 96%;
+    --muted-foreground: 220 12% 46%;
+    --accent: 229 100% 97%;
+    --accent-foreground: 229 65% 34%;
+    --destructive: 350 89% 47%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 18% 88%;
+    --input: 220 18% 88%;
+    --ring: 229 78% 58%;
+    --radius: 0.65rem;
+  }
+
+  html {
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  }
+  body {
+    @apply bg-ink-50 text-ink-900 antialiased;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white;
+  }
+}
+
+@layer utilities {
+  /* Chiffres alignés en colonnes (tabular figures) - usage systématique
+     pour tout montant, quantité ou identifiant dans les tables financières. */
+  .font-ledger {
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Scrollbar discrète pour les listes internes (instruments, historique,
+     etc.) - pour que le scroll d'une liste se distingue visuellement du
+     scroll de la page. */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: theme("colors.ink.200") transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: theme("colors.ink.200");
+    border-radius: 9999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: theme("colors.ink.300");
+  }
+}

@@ -1,0 +1,86 @@
+import { Receipt } from "lucide-react";
+import type { EnrichedTransaction } from "../../hooks/useOrdersOverview";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
+import { Skeleton } from "../ui/skeleton";
+import { EmptyState } from "../common/EmptyState";
+import { OrderSideBadge } from "../common/StatusBadge";
+import { formatQuantity } from "../../../../../shared/utils/formatNumber";
+import { formatDate } from "../../../../../shared/utils/formatDate";
+
+interface TransactionsTableProps {
+  transactions: EnrichedTransaction[];
+  isLoading?: boolean;
+}
+
+/**
+ * TransactionsTable - historique des exécutions d'ordres (fills), tel que
+ * persisté en base et agrégé tous portefeuilles confondus (voir
+ * useConsolidatedTransactions).
+ */
+export function TransactionsTable({ transactions, isLoading }: TransactionsTableProps) {
+  if (isLoading) {
+    return (
+      <div className="overflow-hidden rounded-xl border border-ink-100 bg-white">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="flex items-center gap-4 border-b border-ink-100 px-4 py-3 last:border-0">
+            <Skeleton className="h-4 w-28" />
+            <Skeleton className="h-4 w-16" />
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (transactions.length === 0) {
+    return (
+      <EmptyState
+        icon={Receipt}
+        title="Aucune transaction récente"
+        description="Les transactions exécutées apparaîtront ici."
+      />
+    );
+  }
+
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Instrument</TableHead>
+          <TableHead>Sens</TableHead>
+          <TableHead>Portefeuille</TableHead>
+          <TableHead className="text-right">Quantité</TableHead>
+          <TableHead className="text-right">Prix</TableHead>
+          <TableHead className="text-right">Montant</TableHead>
+          <TableHead>Exécuté le</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {transactions.map(({ transaction, portfolioName, instrument }) => (
+          <TableRow key={transaction.id}>
+            <TableCell>
+              <div className="font-semibold text-ink-900">
+                {instrument?.symbol ?? transaction.instrumentId.slice(0, 8)}
+              </div>
+              {instrument && <div className="text-xs text-ink-400">{instrument.name}</div>}
+            </TableCell>
+            <TableCell>
+              <OrderSideBadge side={transaction.side} />
+            </TableCell>
+            <TableCell className="text-ink-500">{portfolioName}</TableCell>
+            <TableCell className="text-right font-ledger">{formatQuantity(transaction.quantity)}</TableCell>
+            <TableCell className="text-right font-ledger">{transaction.price.format()}</TableCell>
+            <TableCell className="text-right font-ledger font-medium">
+              {transaction.price.multiply(transaction.quantity).format()}
+            </TableCell>
+            <TableCell className="font-ledger text-xs text-ink-500">
+              {formatDate(transaction.executedAt)}
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
