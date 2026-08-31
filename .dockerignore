@@ -1,0 +1,17 @@
+node_modules
+npm-debug.log
+dist
+.git
+.gitignore
+README.md
+.env
+.env.local
+.vscode
+.DS_Store
+coverage
+htmlcov
+*.egg-info
+.pytest_cache
+.tox
+__pycache__
+venv
