@@ -1,81 +1,60 @@
-import { useState } from "react";
-import { Bell, TrendingUp, ShieldAlert, ArrowLeftRight, Landmark, Lock } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { Bell, ArrowLeftRight } from "lucide-react";
 import { PageContainer } from "../components/layout/PageContainer";
 import { Alert, AlertTitle, AlertDescription } from "../components/ui/alert";
-import { Badge } from "../components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import { OrderSideBadge } from "../components/common/StatusBadge";
+import { Skeleton } from "../components/ui/skeleton";
 import { EmptyState } from "../components/common/EmptyState";
-import {
-  NOTIFICATIONS_PREVIEW,
-  NOTIFICATION_CATEGORY_LABELS,
-  type NotificationCategory,
-} from "../../../../mocks/notifications";
+import { useOrderAlerts, ORDER_ALERT_TITLE, type OrderAlert } from "../hooks/useOrderAlerts";
+import { formatQuantity } from "../../../../shared/utils/formatNumber";
+import { formatDate } from "../../../../shared/utils/formatDate";
+import type { OrderStatus } from "../../../../domain/enums/OrderStatus";
 
-const CATEGORY_ICONS: Record<NotificationCategory, LucideIcon> = {
-  performance: TrendingUp,
-  risk: ShieldAlert,
-  orders: ArrowLeftRight,
-  markets: Landmark,
-  security: Lock,
+const STATUS_ALERT_VARIANT: Record<OrderStatus, "default" | "warning"> = {
+  EXECUTED: "default",
+  PENDING: "warning",
+  CANCELLED: "default",
 };
 
-const CATEGORIES: NotificationCategory[] = ["performance", "risk", "orders", "markets", "security"];
-
 /**
- * AlertsPage - "Alertes", catégorisées (performance, risque, ordres,
- * marchés, sécurité). Le contenu vient de mocks/notifications.ts : aucun
- * endpoint d'alertes n'existe côté API.
+ * AlertsPage - "Alertes". Auparavant catégorisées (performance, risque,
+ * ordres, marchés, sécurité) via mocks/notifications.ts ; le backend n'a
+ * de contrepartie réelle que pour les ordres (voir useOrderAlerts), les
+ * autres catégories ont été retirées faute de données réelles plutôt que
+ * laissées mockées.
  */
 export function AlertsPage() {
-  const [category, setCategory] = useState<NotificationCategory | "all">("all");
-
-  const filtered =
-    category === "all"
-      ? NOTIFICATIONS_PREVIEW
-      : NOTIFICATIONS_PREVIEW.filter((n) => n.category === category);
+  const { alerts, isLoading } = useOrderAlerts();
 
   return (
-    <PageContainer title="Alertes" description="Les événements importants sur votre patrimoine.">
-      <Tabs value={category} onValueChange={(v) => setCategory(v as NotificationCategory | "all")}>
-        <TabsList>
-          <TabsTrigger value="all">Toutes</TabsTrigger>
-          {CATEGORIES.map((c) => (
-            <TabsTrigger key={c} value={c}>
-              {NOTIFICATION_CATEGORY_LABELS[c]}
-            </TabsTrigger>
+    <PageContainer title="Alertes" description="Les derniers ordres passés sur vos portefeuilles.">
+      {isLoading ? (
+        <div className="space-y-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-16 w-full" />
           ))}
-        </TabsList>
-
-        <TabsContent value={category}>
-          {filtered.length === 0 ? (
-            <EmptyState icon={Bell} title="Aucune alerte" description="Aucune alerte dans cette catégorie." />
-          ) : (
-            <div className="space-y-3">
-              {filtered.map((notification) => {
-                const Icon = CATEGORY_ICONS[notification.category];
-                return (
-                  <Alert
-                    key={notification.id}
-                    variant={notification.severity === "warning" ? "warning" : "default"}
-                  >
-                    <Icon />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <AlertTitle>{notification.title}</AlertTitle>
-                        <Badge variant="neutral" className="ml-auto">
-                          {NOTIFICATION_CATEGORY_LABELS[notification.category]}
-                        </Badge>
-                      </div>
-                      <AlertDescription>{notification.description}</AlertDescription>
-                    </div>
-                  </Alert>
-                );
-              })}
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+        </div>
+      ) : alerts.length === 0 ? (
+        <EmptyState icon={Bell} title="Aucune alerte" description="Aucun ordre n'a encore été passé." />
+      ) : (
+        <div className="space-y-3">
+          {alerts.map(({ order, portfolioName, instrumentSymbol }: OrderAlert) => (
+            <Alert key={order.id} variant={STATUS_ALERT_VARIANT[order.status]}>
+              <ArrowLeftRight />
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <AlertTitle>{ORDER_ALERT_TITLE[order.status]}</AlertTitle>
+                  <OrderSideBadge side={order.side} />
+                  <span className="ml-auto text-xs text-ink-400">{formatDate(order.createdAt)}</span>
+                </div>
+                <AlertDescription>
+                  {formatQuantity(order.quantity)} {instrumentSymbol} - {portfolioName} -{" "}
+                  {order.price.format()}
+                </AlertDescription>
+              </div>
+            </Alert>
+          ))}
+        </div>
+      )}
     </PageContainer>
   );
 }

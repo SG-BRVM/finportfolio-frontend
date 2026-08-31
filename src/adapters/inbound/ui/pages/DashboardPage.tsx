@@ -6,7 +6,6 @@ import { PortfolioHeroCard } from "../components/dashboard/PortfolioHeroCard";
 import {
   PerformanceOverviewCard,
   LiquidityOverviewCard,
-  RiskOverviewCard,
 } from "../components/dashboard/DashboardOverviewCards";
 import { PortfolioPositionsTable } from "../components/portfolios/PortfolioPositionsTable";
 import { PortfolioOrdersTable } from "../components/portfolios/PortfolioOrdersTable";
@@ -21,8 +20,6 @@ import {
 import { usePortfolios, usePortfolioPositions, usePortfolioOrders } from "../hooks/usePortfolios";
 import { usePortfolioOverview } from "../hooks/usePortfolioOverview";
 import { useInstruments } from "../hooks/useInstruments";
-import { getPortfolioRiskProfile } from "../../../../mocks/risk";
-import { CURRENT_USER } from "../../../../mocks/user";
 import { ROUTES } from "../../../../shared/constants/routes";
 
 /**
@@ -30,10 +27,12 @@ import { ROUTES } from "../../../../shared/constants/routes";
  * totale et la performance du portefeuille "sélectionné" parmi ceux
  * connus dans la session (le backend n'exposant pas de portefeuille "par
  * défaut" global), puis le détail de ses positions et derniers ordres.
+ *
+ * Pas de salutation personnalisée ("Bonjour, {prénom}") : il n'existe
+ * aucune notion d'utilisateur connecté / authentifié côté backend (voir
+ * app/domain - Investor n'est qu'un tiers géré en CRUD, pas un compte).
  */
 export function DashboardPage() {
-  const firstName = CURRENT_USER.name.split(" ")[0];
-
   const { portfolios, isLoading: arePortfoliosLoading } = usePortfolios();
   const { data: instruments = [] } = useInstruments();
 
@@ -49,14 +48,13 @@ export function DashboardPage() {
   const { data: positions = [] } = usePortfolioPositions(selectedPortfolioId);
   const { data: orders = [] } = usePortfolioOrders(selectedPortfolioId);
   const overview = usePortfolioOverview(selectedPortfolio);
-  const riskProfile = selectedPortfolioId ? getPortfolioRiskProfile(selectedPortfolioId) : null;
 
   const instrumentsById = new Map(instruments.map((i) => [i.id, i]));
   const recentOrders = orders.slice(0, 5);
 
   return (
     <PageContainer
-      title={`Bonjour, ${firstName}`}
+      title="Tableau de bord"
       description="Voici un aperçu de votre situation financière."
       actions={
         portfolios.length > 0 && (
@@ -79,7 +77,7 @@ export function DashboardPage() {
         <EmptyState
           icon={Briefcase}
           title="Aucun portefeuille à afficher"
-          description="Créez un investisseur puis un portefeuille pour voir sa valorisation, sa performance et son niveau de risque ici."
+          description="Créez un investisseur puis un portefeuille pour voir sa valorisation et sa performance ici."
           action={
             <Link
               to={ROUTES.portfolios}
@@ -99,7 +97,7 @@ export function DashboardPage() {
               isLoading={overview.isLoading}
             />
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <PerformanceOverviewCard
                 pnl={overview.pnl ?? null}
                 performancePercentage={overview.performancePercentage}
@@ -110,7 +108,6 @@ export function DashboardPage() {
                 shareOfTotalPercentage={overview.liquidityPercentage}
                 isLoading={overview.isLoading}
               />
-              <RiskOverviewCard riskProfile={riskProfile} />
             </div>
 
             <div className="flex items-center justify-end">
@@ -141,3 +138,4 @@ export function DashboardPage() {
     </PageContainer>
   );
 }
+

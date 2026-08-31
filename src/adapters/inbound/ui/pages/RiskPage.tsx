@@ -1,36 +1,28 @@
 import { Link } from "react-router-dom";
-import { Briefcase, ShieldAlert, ShieldCheck, TriangleAlert, Lightbulb } from "lucide-react";
+import { Briefcase, TriangleAlert, Lightbulb } from "lucide-react";
 import { PageContainer } from "../components/layout/PageContainer";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
-import { Progress } from "../components/ui/progress";
+import { Card, CardContent, CardHeader, CardDescription } from "../components/ui/card";
 import { Alert, AlertTitle, AlertDescription } from "../components/ui/alert";
 import { Skeleton } from "../components/ui/skeleton";
 import { EmptyState } from "../components/common/EmptyState";
 import { useConsolidatedPortfolio } from "../hooks/useConsolidatedPortfolio";
-import { getConsolidatedRiskProfile } from "../../../../mocks/risk";
 import { SECTOR_LABELS } from "../../../../domain/enums/Sector";
 import { formatPercentage } from "../../../../shared/utils/formatPercentage";
 import { ROUTES } from "../../../../shared/constants/routes";
 
-const RISK_TONE = {
-  low: "success",
-  moderate: "warning",
-  high: "destructive",
-} as const;
-
 /**
  * RiskPage - "Profil de risque", tous portefeuilles connus confondus.
  *
- * Score/niveau/volatilité/drawdown restent temporairement mockés (voir
- * mocks/risk.ts, aucune notion de risque côté API). La concentration
- * sectorielle et l'exposition actions, elles, sont calculées à partir des
- * vraies positions et du vrai champ FinancialInstrument.sector.
+ * N'affiche que ce qui est réellement calculable à partir du backend :
+ * concentration sectorielle et exposition actions, dérivées des vraies
+ * positions et du vrai champ FinancialInstrument.sector. Il n'existe
+ * aucune notion de score de risque, de niveau global, de volatilité ni
+ * de drawdown dans le Domain backend actuel (voir app/domain côté
+ * finportfolio) : ces indicateurs, auparavant mockés (mocks/risk.ts,
+ * supprimé), ont été retirés plutôt que remplacés faute de donnée réelle.
  */
 export function RiskPage() {
-  const { portfolios, positions, totalValuation, hasAnyPortfolio, isLoading } =
-    useConsolidatedPortfolio();
-
-  const riskProfile = getConsolidatedRiskProfile(portfolios.map((p) => p.id));
+  const { positions, totalValuation, hasAnyPortfolio, isLoading } = useConsolidatedPortfolio();
 
   let concentration: { sector: string; percentage: number } | null = null;
   let equityExposurePercentage: number | null = null;
@@ -56,7 +48,7 @@ export function RiskPage() {
   return (
     <PageContainer
       title="Profil de risque"
-      description="Le niveau de risque de votre patrimoine et les indicateurs qui l'expliquent."
+      description="Concentration sectorielle et exposition de votre patrimoine."
     >
       {!isLoading && !hasAnyPortfolio ? (
         <EmptyState
@@ -74,55 +66,7 @@ export function RiskPage() {
         />
       ) : (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <Card>
-              <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
-                <CardTitle className="text-xs uppercase tracking-wider text-ink-400">
-                  Risque global
-                </CardTitle>
-                {riskProfile.level === "high" ? (
-                  <ShieldAlert className="h-4 w-4 text-rose-500" />
-                ) : (
-                  <ShieldCheck
-                    className={`h-4 w-4 ${riskProfile.level === "moderate" ? "text-amber-500" : "text-emerald-500"}`}
-                  />
-                )}
-              </CardHeader>
-              <CardContent className="pt-0">
-                {isLoading ? (
-                  <Skeleton className="h-8 w-28" />
-                ) : (
-                  <p className="font-ledger text-2xl font-semibold text-ink-900">
-                    {riskProfile.label.toUpperCase()}
-                  </p>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-xs uppercase tracking-wider text-ink-400">Score</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                {isLoading ? (
-                  <Skeleton className="h-8 w-28" />
-                ) : (
-                  <>
-                    <p className="font-ledger text-2xl font-semibold text-ink-900">
-                      {riskProfile.score} / 100
-                    </p>
-                    <Progress value={riskProfile.score} tone={RISK_TONE[riskProfile.level]} className="mt-3" />
-                  </>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <MetricCard
-              label="Volatilité annualisée"
-              value={isLoading ? undefined : formatPercentage(riskProfile.volatility, { forceSign: false, decimals: 1 })}
-            />
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <MetricCard
               label="Concentration"
               value={
@@ -143,10 +87,6 @@ export function RiskPage() {
                     ? formatPercentage(equityExposurePercentage, { forceSign: false, decimals: 1 })
                     : "—"
               }
-            />
-            <MetricCard
-              label="Drawdown maximal"
-              value={isLoading ? undefined : formatPercentage(riskProfile.maxDrawdown, { forceSign: false, decimals: 1 })}
             />
           </div>
 
@@ -200,3 +140,4 @@ function MetricCard({ label, value, hint }: { label: string; value?: string; hin
     </Card>
   );
 }
+

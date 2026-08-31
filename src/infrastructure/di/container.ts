@@ -8,6 +8,7 @@ import { HttpOrderRepository } from "../../adapters/outbound/http/repositories/H
 import { HttpHealthRepository } from "../../adapters/outbound/http/repositories/HttpHealthRepository";
 import { HttpMarketDataRepository } from "../../adapters/outbound/http/repositories/HttpMarketDataRepository";
 import { HttpGoalRepository } from "../../adapters/outbound/http/repositories/HttpGoalRepository";
+import { HttpDocumentRepository } from "../../adapters/outbound/http/repositories/HttpDocumentRepository";
 
 import { CreateInvestorUseCase } from "../../application/use-cases/investors/CreateInvestorUseCase";
 import { GetInvestorUseCase } from "../../application/use-cases/investors/GetInvestorUseCase";
@@ -46,6 +47,10 @@ import { RunDemoEndpointsUseCase } from "../../application/use-cases/health/RunD
 import { CreateGoalUseCase } from "../../application/use-cases/goals/CreateGoalUseCase";
 import { GetGoalsUseCase } from "../../application/use-cases/goals/GetGoalsUseCase";
 
+import { UploadDocumentUseCase } from "../../application/use-cases/documents/UploadDocumentUseCase";
+import { GetDocumentsUseCase } from "../../application/use-cases/documents/GetDocumentsUseCase";
+import { GetDocumentContentUseCase } from "../../application/use-cases/documents/GetDocumentContentUseCase";
+
 import { ConsoleTelemetryAdapter } from "../../adapters/outbound/telemetry/ConsoleTelemetryAdapter";
 import type { TelemetryPort } from "../../adapters/outbound/telemetry/TelemetryPort";
 
@@ -71,6 +76,7 @@ function buildContainer() {
   const healthRepository = new HttpHealthRepository(httpClient);
   const marketDataRepository = new HttpMarketDataRepository(httpClient);
   const goalRepository = new HttpGoalRepository(httpClient);
+  const documentRepository = new HttpDocumentRepository(httpClient);
 
   const telemetry: TelemetryPort = new ConsoleTelemetryAdapter();
 
@@ -111,6 +117,11 @@ function buildContainer() {
       goals: {
         create: new CreateGoalUseCase(goalRepository),
         getAll: new GetGoalsUseCase(goalRepository),
+      },
+      documents: {
+        upload: new UploadDocumentUseCase(documentRepository),
+        getAll: new GetDocumentsUseCase(documentRepository),
+        getContent: new GetDocumentContentUseCase(documentRepository),
       },
       orders: {
         create: new CreateOrderUseCase(orderRepository),

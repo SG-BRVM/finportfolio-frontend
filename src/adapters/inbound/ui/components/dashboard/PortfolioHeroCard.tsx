@@ -32,7 +32,7 @@ export function PortfolioHeroCard({
           <div className="flex items-center gap-2 text-brand-200">
             <Landmark className="h-4 w-4" />
             <span className="text-xs font-medium uppercase tracking-wider">
-              Patrimoine total · {portfolioName}
+              Patrimoine total - {portfolioName}
             </span>
           </div>
 

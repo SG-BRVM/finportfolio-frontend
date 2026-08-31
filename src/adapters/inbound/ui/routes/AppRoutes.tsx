@@ -19,7 +19,6 @@ import { GoalsPage } from "../pages/GoalsPage";
 import { AdvicePage } from "../pages/AdvicePage";
 import { AlertsPage } from "../pages/AlertsPage";
 import { DocumentsPage } from "../pages/DocumentsPage";
-import { SecurityPage } from "../pages/SecurityPage";
 
 /**
  * AppRoutes - table de routage.
@@ -28,7 +27,9 @@ import { SecurityPage } from "../pages/SecurityPage";
  * de la navigation métier (voir components/layout/navigation.ts) dont la
  * refonte fonctionnelle arrive dans une phase ultérieure : la nav est
  * déjà complète, seul le contenu de la page reste à construire.
- * Restent dans ce cas : Paramètres.
+ * Restent dans ce cas : Paramètres, Sécurité (aucun système
+ * d'authentification n'existe côté backend - voir app/domain -, l'ancien
+ * contenu mocké de SecurityPage.tsx a été retiré).
  *
  * /investors et /health restent fonctionnelles mais ne sont plus liées
  * depuis la navigation utilisateur (écrans techniques/CRUD, voir
@@ -61,7 +62,15 @@ export function AppRoutes() {
         <Route path={ROUTES.alerts} element={<AlertsPage />} />
         <Route path={ROUTES.documents} element={<DocumentsPage />} />
 
-        <Route path={ROUTES.security} element={<SecurityPage />} />
+        <Route
+          path={ROUTES.security}
+          element={
+            <ComingSoonPage
+              title="Sécurité"
+              description="L'authentification, vos sessions et vos appareils arrivent prochainement."
+            />
+          }
+        />
         <Route
           path={ROUTES.settings}
           element={

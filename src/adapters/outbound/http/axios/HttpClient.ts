@@ -35,6 +35,29 @@ export class HttpClient {
     }
   }
 
+  /** POST multipart/form-data (upload de fichier) - le boundary est géré
+   * par Axios/le navigateur, ne jamais fixer le Content-Type à la main. */
+  async postForm<T>(url: string, formData: FormData): Promise<T> {
+    try {
+      const response = await this.axios.post<T>(url, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return response.data;
+    } catch (error) {
+      throw HttpClient.toApplicationError(error);
+    }
+  }
+
+  /** GET dont la réponse est le contenu binaire brut d'un fichier. */
+  async getBlob(url: string): Promise<Blob> {
+    try {
+      const response = await this.axios.get<Blob>(url, { responseType: "blob" });
+      return response.data;
+    } catch (error) {
+      throw HttpClient.toApplicationError(error);
+    }
+  }
+
   async patch<T>(url: string, body?: unknown): Promise<T> {
     try {
       const response = await this.axios.patch<T>(url, body ?? {});

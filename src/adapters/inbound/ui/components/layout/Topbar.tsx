@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Bell, Menu, Lock, Settings } from "lucide-react";
+import { Bell, Menu, Lock, Settings, UserRound } from "lucide-react";
 import { useBackendHealth } from "../../hooks/useHealth";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { Button } from "../ui/button";
@@ -22,8 +22,7 @@ import {
 } from "../ui/breadcrumb";
 import { getBreadcrumbTrail } from "./navigation";
 import { ROUTES } from "../../../../../shared/constants/routes";
-import { CURRENT_USER } from "../../../../../mocks/user";
-import { NOTIFICATIONS_PREVIEW } from "../../../../../mocks/notifications";
+import { useOrderAlerts, ORDER_ALERT_TITLE } from "../../hooks/useOrderAlerts";
 
 interface TopbarProps {
   onOpenMobileNav: () => void;
@@ -36,6 +35,9 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
 
   const location = useLocation();
   const trail = getBreadcrumbTrail(location.pathname);
+
+  const { alerts } = useOrderAlerts();
+  const recentAlerts = alerts.slice(0, 5);
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-3 border-b border-ink-100 bg-white px-4 md:px-6">
@@ -100,7 +102,7 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="relative" aria-label="Notifications">
               <Bell className="h-[18px] w-[18px]" />
-              {NOTIFICATIONS_PREVIEW.length > 0 && (
+              {recentAlerts.length > 0 && (
                 <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-brand-600" />
               )}
             </Button>
@@ -108,13 +110,17 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
           <DropdownMenuContent align="end" className="w-80">
             <DropdownMenuLabel>Notifications</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {NOTIFICATIONS_PREVIEW.length === 0 ? (
+            {recentAlerts.length === 0 ? (
               <p className="px-2 py-3 text-sm text-ink-400">Aucune notification pour le moment.</p>
             ) : (
-              NOTIFICATIONS_PREVIEW.map((notification) => (
-                <DropdownMenuItem key={notification.id} className="flex-col items-start gap-0.5">
-                  <span className="text-sm font-medium text-ink-800">{notification.title}</span>
-                  <span className="text-xs text-ink-400">{notification.description}</span>
+              recentAlerts.map(({ order, portfolioName, instrumentSymbol }) => (
+                <DropdownMenuItem key={order.id} className="flex-col items-start gap-0.5">
+                  <span className="text-sm font-medium text-ink-800">
+                    {ORDER_ALERT_TITLE[order.status]}
+                  </span>
+                  <span className="text-xs text-ink-400">
+                    {instrumentSymbol} - {portfolioName}
+                  </span>
                 </DropdownMenuItem>
               ))
             )}
@@ -132,13 +138,14 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
         <DropdownMenu>
           <DropdownMenuTrigger className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">
             <Avatar className="h-8 w-8">
-              <AvatarFallback>{CURRENT_USER.initials}</AvatarFallback>
+              <AvatarFallback>
+                <UserRound className="h-4 w-4" />
+              </AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel className="normal-case">
-              <p className="text-sm font-medium text-ink-800">{CURRENT_USER.name}</p>
-              <p className="text-xs font-normal text-ink-400">{CURRENT_USER.email}</p>
+            <DropdownMenuLabel className="normal-case text-xs font-normal text-ink-400">
+              Mon compte
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
