@@ -14,7 +14,7 @@ import type { Money } from "../../domain/value-objects/Money";
  *
  * Retourne `null` quand le dénominateur est nul (rien à rapporter :
  * portefeuille vide, aucun coût d'acquisition, ...), pour que l'appelant
- * affiche un état neutre ("—") plutôt qu'un NaN ou un 0 % trompeur.
+ * affiche un état neutre ("-") plutôt qu'un NaN ou un 0 % trompeur.
  */
 export function toRatioPercentage(numerator: Money, denominator: Money): number | null {
   if (denominator.isZero()) return null;

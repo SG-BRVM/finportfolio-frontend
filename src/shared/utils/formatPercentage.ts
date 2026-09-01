@@ -1,3 +1,5 @@
+import { getIntlLocale } from "../../infrastructure/i18n/i18n";
+
 /**
  * Formate une variation en pourcentage pour l'affichage (ex. "+4,82 %").
  *
@@ -10,7 +12,7 @@ export function formatPercentage(
   value: number,
   options: { decimals?: number; forceSign?: boolean; locale?: string } = {},
 ): string {
-  const { decimals = 2, forceSign = true, locale = "fr-FR" } = options;
+  const { decimals = 2, forceSign = true, locale = getIntlLocale() } = options;
   const formatted = new Intl.NumberFormat(locale, {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,

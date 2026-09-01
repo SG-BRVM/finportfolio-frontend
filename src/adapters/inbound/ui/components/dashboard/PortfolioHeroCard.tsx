@@ -1,4 +1,5 @@
 import { Landmark } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { Money } from "../../../../../domain/value-objects/Money";
 import { PerformanceBadge } from "../common/PerformanceBadge";
 import { Card, CardContent } from "../ui/card";
@@ -25,6 +26,7 @@ export function PortfolioHeroCard({
   performancePercentage,
   isLoading,
 }: PortfolioHeroCardProps) {
+  const { t } = useTranslation();
   return (
     <Card className="overflow-hidden bg-brand-950">
       <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8">
@@ -32,7 +34,7 @@ export function PortfolioHeroCard({
           <div className="flex items-center gap-2 text-brand-200">
             <Landmark className="h-4 w-4" />
             <span className="text-xs font-medium uppercase tracking-wider">
-              Patrimoine total · {portfolioName}
+              {t("dashboard.totalWealth")} - {portfolioName}
             </span>
           </div>
 
@@ -51,7 +53,7 @@ export function PortfolioHeroCard({
           ) : (
             <PerformanceBadge value={performancePercentage} />
           )}
-          <span className="text-sm text-brand-200">performance non réalisée sur les positions</span>
+          <span className="text-sm text-brand-200">{t("dashboard.unrealizedPerformanceOnPositions")}</span>
         </div>
       </CardContent>
     </Card>

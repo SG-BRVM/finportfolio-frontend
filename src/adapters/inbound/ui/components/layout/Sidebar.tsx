@@ -1,10 +1,12 @@
 import { ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { SidebarNavigation } from "./SidebarNavigation";
 import { ROUTES } from "../../../../../shared/constants/routes";
 
 /** Sidebar - navigation principale (desktop), hiérarchique avec sections repliables par domaine métier client. */
 export function Sidebar() {
+  const { t } = useTranslation();
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-r border-ink-100 bg-white md:flex">
       <Link
@@ -25,9 +27,9 @@ export function Sidebar() {
         <div className="flex items-start gap-2 rounded-lg bg-ink-50 px-3 py-2.5 text-xs text-ink-400">
           <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-ink-300" />
           <span>
-            Environnement bac à sable
+            {t("layout.sandboxEnvironment")}
             <br />
-            Données de démonstration
+            {t("layout.demoData")}
           </span>
         </div>
       </div>

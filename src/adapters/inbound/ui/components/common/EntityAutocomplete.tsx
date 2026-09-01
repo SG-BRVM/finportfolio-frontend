@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Popover, PopoverAnchor, PopoverContent } from "../ui/popover";
 import { Label } from "../ui/label";
 
@@ -49,6 +50,7 @@ export function EntityAutocomplete({
   resolvedLabel,
   emptyHint,
 }: EntityAutocompleteProps) {
+  const { t } = useTranslation();
   const [inputValue, setInputValue] = useState(resolvedLabel ?? value ?? "");
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -101,10 +103,10 @@ export function EntityAutocomplete({
           }}
         >
           <ul className="py-1 text-sm">
-            {isLoading && <li className="px-3 py-2 text-ink-400">Recherche…</li>}
+            {isLoading && <li className="px-3 py-2 text-ink-400">{t("autocomplete.searching")}</li>}
             {!isLoading && options.length === 0 && (
               <li className="px-3 py-2 text-ink-400">
-                {emptyHint ?? "Aucun résultat. L'id saisi sera utilisé tel quel."}
+                {emptyHint ?? t("autocomplete.noResultsUseAsIs")}
               </li>
             )}
             {!isLoading &&

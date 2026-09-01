@@ -7,6 +7,7 @@ import { EmptyState } from "../components/common/EmptyState";
 import { usePortfolios } from "../hooks/usePortfolios";
 import { ROUTES } from "../../../../shared/constants/routes";
 import { Briefcase } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 /**
  * PortfoliosPage - "Mes portefeuilles".
@@ -17,6 +18,7 @@ import { Briefcase } from "lucide-react";
  * portefeuille pour cet investisseur précis.
  */
 export function PortfoliosPage() {
+  const { t } = useTranslation();
   const { portfolios, isLoading } = usePortfolios();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -24,8 +26,8 @@ export function PortfoliosPage() {
 
   return (
     <PageContainer
-      title="Portefeuilles"
-      description="Consultez vos portefeuilles et créez-en de nouveaux."
+      title={t("nav.portfolios")}
+      description={t("portfolios.pageDescription")}
     >
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-1">
@@ -40,8 +42,8 @@ export function PortfoliosPage() {
           ) : portfolios.length === 0 ? (
             <EmptyState
               icon={Briefcase}
-              title="Aucun portefeuille pour le moment"
-              description="Créez votre premier portefeuille avec le formulaire à gauche."
+              title={t("portfolios.emptyTitle")}
+              description={t("portfolios.emptyDescription")}
             />
           ) : (
             portfolios.map((portfolio) => <PortfolioCard key={portfolio.id} portfolio={portfolio} />)

@@ -1,5 +1,7 @@
 import type { ConsolidatedPosition } from "../../hooks/useConsolidatedPortfolio";
-import { SECTOR_LABELS, type Sector } from "../../../../../domain/enums/Sector";
+import type { Sector } from "../../../../../domain/enums/Sector";
+import { useSectorLabels } from "../common/useSectorLabels";
+import { useTranslation } from "react-i18next";
 import { formatPercentage } from "../../../../../shared/utils/formatPercentage";
 import { Progress } from "../ui/progress";
 import { Skeleton } from "../ui/skeleton";
@@ -11,8 +13,6 @@ interface SectorExposureProps {
   isLoading?: boolean;
 }
 
-const UNKNOWN_SECTOR_LABEL = "Secteur non renseigné";
-
 /**
  * SectorExposure - répartition du patrimoine par secteur d'activité.
  * Le secteur de chaque instrument est le vrai champ backend
@@ -20,6 +20,8 @@ const UNKNOWN_SECTOR_LABEL = "Secteur non renseigné";
  * sont regroupés sous "Secteur non renseigné" plutôt qu'écartés.
  */
 export function SectorExposure({ positions, isLoading }: SectorExposureProps) {
+  const { t } = useTranslation();
+  const sectorLabels = useSectorLabels();
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -44,15 +46,15 @@ export function SectorExposure({ positions, isLoading }: SectorExposureProps) {
     return (
       <EmptyState
         icon={Landmark}
-        title="Aucune exposition à afficher"
-        description="L'exposition sectorielle apparaîtra une fois votre portefeuille investi."
+        title={t("allocation.sector.emptyTitle")}
+        description={t("allocation.sector.emptyDescription")}
       />
     );
   }
 
   const rows = [...totals.entries()]
     .map(([sector, value]) => ({
-      label: sector ? SECTOR_LABELS[sector] : UNKNOWN_SECTOR_LABEL,
+      label: sector ? sectorLabels[sector] : t("allocation.sector.unknown"),
       percentage: (value / grandTotal) * 100,
     }))
     .sort((a, b) => b.percentage - a.percentage);

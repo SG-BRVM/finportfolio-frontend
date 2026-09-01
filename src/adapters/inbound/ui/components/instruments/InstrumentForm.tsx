@@ -1,38 +1,47 @@
 import { useForm, Controller } from "react-hook-form";
+import { useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useCreateInstrument } from "../../hooks/useInstruments";
 import { getErrorMessage } from "../../utils/errorMessage";
 import { INSTRUMENT_TYPES } from "../../../../../domain/enums/InstrumentType";
-import { SECTORS, SECTOR_LABELS } from "../../../../../domain/enums/Sector";
+import { SECTORS } from "../../../../../domain/enums/Sector";
+import { useSectorLabels } from "../common/useSectorLabels";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Button } from "../ui/button";
 
-const schema = z.object({
-  symbol: z.string().min(1, "Le symbole est requis.").max(20),
-  name: z.string().min(1, "Le nom est requis."),
-  instrumentType: z.enum(["STOCK", "BOND", "ETF", "FUND"]),
-  currency: z
-    .string()
-    .min(3, "3 lettres requises.")
-    .max(3, "3 lettres requises.")
-    .transform((v) => v.toUpperCase()),
-  currentPrice: z
-    .string()
-    .min(1, "Le prix est requis.")
-    .refine((v) => Number(v) >= 0, "Le prix doit être positif ou nul."),
-  nominalValue: z
-    .string()
-    .optional()
-    .refine((v) => !v || Number(v) > 0, "La valeur nominale doit être strictement positive."),
-  sector: z.enum(["FINANCE", "TELECOMMUNICATIONS", "INDUSTRY", "ENERGY", "CONSUMER", "OTHER", ""]).optional(),
-});
+function buildSchema(t: TFunction) {
+  return z.object({
+    symbol: z.string().min(1, t("instruments.form.symbolRequired")).max(20),
+    name: z.string().min(1, t("instruments.form.nameRequired")),
+    instrumentType: z.enum(["STOCK", "BOND", "ETF", "FUND"]),
+    currency: z
+      .string()
+      .min(3, t("portfolios.form.threeLettersRequired"))
+      .max(3, t("portfolios.form.threeLettersRequired"))
+      .transform((v) => v.toUpperCase()),
+    currentPrice: z
+      .string()
+      .min(1, t("instruments.form.priceRequired"))
+      .refine((v) => Number(v) >= 0, t("instruments.form.pricePositiveOrZero")),
+    nominalValue: z
+      .string()
+      .optional()
+      .refine((v) => !v || Number(v) > 0, t("instruments.form.nominalValuePositive")),
+    sector: z.enum(["FINANCE", "TELECOMMUNICATIONS", "INDUSTRY", "ENERGY", "CONSUMER", "OTHER", ""]).optional(),
+  });
+}
 
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
 /** InstrumentForm - création d'un instrument financier. */
 export function InstrumentForm() {
+  const { t, i18n } = useTranslation();
+  const schema = useMemo(() => buildSchema(t), [i18n.language]); // eslint-disable-line react-hooks/exhaustive-deps
+  const sectorLabels = useSectorLabels();
   const {
     register,
     handleSubmit,
@@ -58,7 +67,7 @@ export function InstrumentForm() {
     <form onSubmit={onSubmit} noValidate className="space-y-4 rounded-xl border border-ink-100 bg-white p-5">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-ink-700">Symbole</label>
+          <label className="mb-1 block text-sm font-medium text-ink-700">{t("instruments.form.symbol")}</label>
           <input
             {...register("symbol")}
             type="text"
@@ -68,7 +77,7 @@ export function InstrumentForm() {
           {errors.symbol && <p className="mt-1 text-xs text-rose-600">{errors.symbol.message}</p>}
         </div>
         <div>
-          <Label>Type</Label>
+          <Label>{t("common.type")}</Label>
           <Controller
             name="instrumentType"
             control={control}
@@ -90,7 +99,7 @@ export function InstrumentForm() {
         </div>
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium text-ink-700">Nom</label>
+        <label className="mb-1 block text-sm font-medium text-ink-700">{t("common.name")}</label>
         <input
           {...register("name")}
           type="text"
@@ -101,7 +110,7 @@ export function InstrumentForm() {
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-ink-700">Devise</label>
+          <label className="mb-1 block text-sm font-medium text-ink-700">{t("common.currency")}</label>
           <input
             {...register("currency")}
             type="text"
@@ -114,7 +123,7 @@ export function InstrumentForm() {
           )}
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-ink-700">Prix courant</label>
+          <label className="mb-1 block text-sm font-medium text-ink-700">{t("portfolios.positions.currentPrice")}</label>
           <input
             {...register("currentPrice")}
             type="text"
@@ -129,7 +138,7 @@ export function InstrumentForm() {
       </div>
       <div>
         <label className="mb-1 block text-sm font-medium text-ink-700">
-          Valeur nominale <span className="font-normal text-ink-400">(optionnel)</span>
+          {t("instruments.form.nominalValue")} <span className="font-normal text-ink-400">({t("common.optional")})</span>
         </label>
         <input
           {...register("nominalValue")}
@@ -144,7 +153,7 @@ export function InstrumentForm() {
       </div>
       <div>
         <Label>
-          Secteur <span className="font-normal text-ink-400">(optionnel)</span>
+          {t("instruments.form.sector")} <span className="font-normal text-ink-400">({t("common.optional")})</span>
         </Label>
         <Controller
           name="sector"
@@ -152,12 +161,12 @@ export function InstrumentForm() {
           render={({ field }) => (
             <Select value={field.value ?? ""} onValueChange={field.onChange}>
               <SelectTrigger>
-                <SelectValue placeholder="Non renseigné" />
+                <SelectValue placeholder={t("instruments.form.notProvided")} />
               </SelectTrigger>
               <SelectContent>
                 {SECTORS.map((sector) => (
                   <SelectItem key={sector} value={sector}>
-                    {SECTOR_LABELS[sector]}
+                    {sectorLabels[sector]}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -169,7 +178,7 @@ export function InstrumentForm() {
         <p className="text-sm text-rose-600">{getErrorMessage(createInstrument.error)}</p>
       )}
       <Button type="submit" disabled={createInstrument.isPending} className="w-full">
-        {createInstrument.isPending ? "Création…" : "Créer l'instrument"}
+        {createInstrument.isPending ? t("instruments.form.creating") : t("instruments.create")}
       </Button>
     </form>
   );

@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { Briefcase } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { Portfolio } from "../../../../../domain/entities/Portfolio";
 import { ROUTES } from "../../../../../shared/constants/routes";
 
 export function PortfolioCard({ portfolio }: { portfolio: Portfolio }) {
+  const { t } = useTranslation();
   return (
     <Link
       to={ROUTES.portfolioDetails(portfolio.id)}
@@ -15,7 +17,7 @@ export function PortfolioCard({ portfolio }: { portfolio: Portfolio }) {
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-semibold text-ink-900">{portfolio.name}</p>
         <p className="truncate font-ledger text-xs text-ink-400">
-          Investisseur {portfolio.investorId.slice(0, 8)}…
+          {t("investors.singular")} {portfolio.investorId.slice(0, 8)}…
         </p>
       </div>
       <span className="shrink-0 rounded-full bg-ink-100 px-2 py-0.5 font-ledger text-xs text-ink-500">

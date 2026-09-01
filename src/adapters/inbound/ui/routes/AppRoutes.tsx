@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { AppLayout } from "../components/layout/AppLayout";
 import { ROUTES } from "../../../../shared/constants/routes";
 import { DashboardPage } from "../pages/DashboardPage";
@@ -36,6 +37,7 @@ import { DocumentsPage } from "../pages/DocumentsPage";
  * navigation.ts).
  */
 export function AppRoutes() {
+  const { t } = useTranslation();
   return (
     <Routes>
       <Route element={<AppLayout />}>
@@ -66,8 +68,8 @@ export function AppRoutes() {
           path={ROUTES.security}
           element={
             <ComingSoonPage
-              title="Sécurité"
-              description="L'authentification, vos sessions et vos appareils arrivent prochainement."
+              title={t("nav.security")}
+              description={t("comingSoon.securityDescription")}
             />
           }
         />
@@ -75,8 +77,8 @@ export function AppRoutes() {
           path={ROUTES.settings}
           element={
             <ComingSoonPage
-              title="Paramètres"
-              description="Les préférences de votre compte arrivent prochainement."
+              title={t("nav.settings")}
+              description={t("comingSoon.settingsDescription")}
             />
           }
         />
@@ -87,8 +89,11 @@ export function AppRoutes() {
           path="*"
           element={
             <ComingSoonPage
-              title="Page introuvable"
-              description="Cette page n'existe pas ou n'est pas encore disponible."
+              title={t("notFound.title", "Page introuvable")}
+              description={t(
+                "notFound.description",
+                "Cette page n'existe pas ou n'est pas encore disponible."
+              )}
             />
           }
         />

@@ -1,6 +1,7 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import type { ConsolidatedPosition } from "../../hooks/useConsolidatedPortfolio";
-import { INSTRUMENT_TYPE_LABELS } from "../common/InstrumentTypeBadge";
+import { useInstrumentTypeLabels } from "../common/InstrumentTypeBadge";
+import { useTranslation } from "react-i18next";
 import type { InstrumentType } from "../../../../../domain/enums/InstrumentType";
 import { formatPercentage } from "../../../../../shared/utils/formatPercentage";
 import { Skeleton } from "../ui/skeleton";
@@ -34,6 +35,8 @@ interface AllocationChartProps {
  * contrairement à l'exposition sectorielle (voir SectorExposure).
  */
 export function AllocationChart({ positions, isLoading }: AllocationChartProps) {
+  const { t } = useTranslation();
+  const instrumentTypeLabels = useInstrumentTypeLabels();
   if (isLoading) {
     return <Skeleton className="mx-auto h-64 w-64 rounded-full" />;
   }
@@ -51,18 +54,18 @@ export function AllocationChart({ positions, isLoading }: AllocationChartProps) 
     return (
       <EmptyState
         icon={PieChartIcon}
-        title="Aucune allocation à afficher"
-        description="Vos positions apparaîtront ici une fois votre portefeuille investi."
+        title={t("allocation.emptyTitle")}
+        description={t("allocation.emptyDescription")}
       />
     );
   }
 
-  const slices: AllocationSlice[] = (Object.keys(INSTRUMENT_TYPE_LABELS) as InstrumentType[])
+  const slices: AllocationSlice[] = (Object.keys(instrumentTypeLabels) as InstrumentType[])
     .map((type) => {
       const value = totals.get(type) ?? 0;
       return {
         type,
-        label: INSTRUMENT_TYPE_LABELS[type],
+        label: instrumentTypeLabels[type],
         value,
         percentage: (value / grandTotal) * 100,
         color: TYPE_COLORS[type],

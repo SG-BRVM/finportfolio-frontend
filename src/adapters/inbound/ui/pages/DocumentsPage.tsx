@@ -10,15 +10,18 @@ import { EmptyState } from "../components/common/EmptyState";
 import { UploadDocumentDialog } from "../components/documents/UploadDocumentDialog";
 import { useDocuments } from "../hooks/useDocuments";
 import { container } from "../../../../infrastructure/di/container";
-import { DOCUMENT_CATEGORIES, DOCUMENT_CATEGORY_LABELS } from "../../../../domain/enums/DocumentCategory";
+import { DOCUMENT_CATEGORIES } from "../../../../domain/enums/DocumentCategory";
+import { useDocumentCategoryLabels } from "../components/common/useDocumentCategoryLabels";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import type { DocumentCategory } from "../../../../domain/enums/DocumentCategory";
 import type { Document } from "../../../../domain/entities/Document";
 import { formatDateShort } from "../../../../shared/utils/formatDate";
 
-function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} o`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} Ko`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} Mo`;
+function formatFileSize(bytes: number, t: TFunction): string {
+  if (bytes < 1024) return t("documents.sizeBytes", { count: bytes });
+  if (bytes < 1024 * 1024) return t("documents.sizeKb", { value: (bytes / 1024).toFixed(1) });
+  return t("documents.sizeMb", { value: (bytes / (1024 * 1024)).toFixed(1) });
 }
 
 /** Récupère le fichier et l'ouvre (Voir) ou force son enregistrement
@@ -47,13 +50,15 @@ async function openDocument(document: Document, mode: "view" | "download") {
  * n'existe aucune notion de partage côté backend.
  */
 export function DocumentsPage() {
+  const { t } = useTranslation();
+  const categoryLabels = useDocumentCategoryLabels();
   const [category, setCategory] = useState<DocumentCategory | "all">("all");
   const { data: documents = [], isLoading } = useDocuments(
     category === "all" ? undefined : category,
   );
 
   return (
-    <PageContainer title="Mes documents" description="Vos relevés et documents réglementaires.">
+    <PageContainer title={t("documents.pageTitle")} description={t("documents.pageDescription")}>
       <Card>
         <CardContent className="pt-6">
           <div className="mb-4 flex items-center justify-between gap-4">
@@ -63,13 +68,13 @@ export function DocumentsPage() {
                 onValueChange={(v) => setCategory(v as DocumentCategory | "all")}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Catégorie" />
+                  <SelectValue placeholder={t("common.type")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Toutes les catégories</SelectItem>
+                  <SelectItem value="all">{t("documents.allCategories")}</SelectItem>
                   {DOCUMENT_CATEGORIES.map((c) => (
                     <SelectItem key={c} value={c}>
-                      {DOCUMENT_CATEGORY_LABELS[c]}
+                      {categoryLabels[c]}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -87,18 +92,18 @@ export function DocumentsPage() {
           ) : documents.length === 0 ? (
             <EmptyState
               icon={FileText}
-              title="Aucun document"
-              description="Aucun document dans cette catégorie."
+              title={t("documents.emptyTitle")}
+              description={t("documents.emptyDescription")}
             />
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Nom</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead className="text-right">Taille</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{t("common.name")}</TableHead>
+                  <TableHead>{t("common.type")}</TableHead>
+                  <TableHead>{t("common.date")}</TableHead>
+                  <TableHead className="text-right">{t("documents.size")}</TableHead>
+                  <TableHead className="text-right">{t("common.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -111,19 +116,19 @@ export function DocumentsPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="neutral">{DOCUMENT_CATEGORY_LABELS[doc.category]}</Badge>
+                      <Badge variant="neutral">{categoryLabels[doc.category]}</Badge>
                     </TableCell>
                     <TableCell className="font-ledger text-xs text-ink-500">
                       {formatDateShort(doc.createdAt)}
                     </TableCell>
                     <TableCell className="text-right font-ledger text-ink-500">
-                      {formatFileSize(doc.sizeBytes)}
+                      {formatFileSize(doc.sizeBytes, t)}
                     </TableCell>
                     <TableCell>
                       <div className="flex justify-end gap-1 text-ink-400">
                         <button
                           type="button"
-                          title="Voir"
+                          title={t("documents.view")}
                           onClick={() => openDocument(doc, "view")}
                           className="rounded p-1 transition hover:bg-ink-100 hover:text-ink-700"
                         >
@@ -131,7 +136,7 @@ export function DocumentsPage() {
                         </button>
                         <button
                           type="button"
-                          title="Télécharger"
+                          title={t("common.download")}
                           onClick={() => openDocument(doc, "download")}
                           className="rounded p-1 transition hover:bg-ink-100 hover:text-ink-700"
                         >

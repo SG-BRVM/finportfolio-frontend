@@ -1,7 +1,8 @@
 import type { Decimal } from "../../domain/value-objects/Decimal";
+import { getIntlLocale } from "../../infrastructure/i18n/i18n";
 
 /** Formate un Decimal du Domain pour l'affichage d'une quantité. */
-export function formatQuantity(quantity: Decimal, locale = "fr-FR"): string {
+export function formatQuantity(quantity: Decimal, locale = getIntlLocale()): string {
   return new Intl.NumberFormat(locale, {
     minimumFractionDigits: 0,
     maximumFractionDigits: 4,
@@ -18,7 +19,7 @@ export function formatNumber(
   value: number,
   options: { decimals?: number; locale?: string } = {},
 ): string {
-  const { decimals = 0, locale = "fr-FR" } = options;
+  const { decimals = 0, locale = getIntlLocale() } = options;
   return new Intl.NumberFormat(locale, {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,

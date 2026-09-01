@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Bell, Menu, Lock, Settings, UserRound } from "lucide-react";
 import { useBackendHealth } from "../../hooks/useHealth";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
@@ -22,14 +23,16 @@ import {
 } from "../ui/breadcrumb";
 import { getBreadcrumbTrail } from "./navigation";
 import { ROUTES } from "../../../../../shared/constants/routes";
-import { useOrderAlerts, ORDER_ALERT_TITLE } from "../../hooks/useOrderAlerts";
+import { useOrderAlerts, useOrderAlertTitle } from "../../hooks/useOrderAlerts";
+import { LanguageSwitcher } from "../common/LanguageSwitcher";
 
 interface TopbarProps {
   onOpenMobileNav: () => void;
 }
 
-/** Topbar - barre supérieure : navigation mobile, fil d'Ariane, statut discret, notifications, compte. */
+/** Topbar - barre supérieure : navigation mobile, fil d'Ariane, statut discret, langue, notifications, compte. */
 export function Topbar({ onOpenMobileNav }: TopbarProps) {
+  const { t } = useTranslation();
   const { data, isLoading, isError } = useBackendHealth();
   const isUp = !isLoading && !isError && data?.health.status === "ok";
 
@@ -38,6 +41,7 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
 
   const { alerts } = useOrderAlerts();
   const recentAlerts = alerts.slice(0, 5);
+  const orderAlertTitle = useOrderAlertTitle();
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-3 border-b border-ink-100 bg-white px-4 md:px-6">
@@ -46,7 +50,7 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
         size="icon"
         className="md:hidden"
         onClick={onOpenMobileNav}
-        aria-label="Ouvrir la navigation"
+        aria-label={t("layout.openNavigation")}
       >
         <Menu className="h-5 w-5" />
       </Button>
@@ -58,15 +62,15 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
       <Breadcrumb className="hidden min-w-0 md:block">
         <BreadcrumbList>
           {trail.map((crumb, index) => (
-            <span key={crumb.label} className="flex items-center gap-1.5">
+            <span key={crumb.labelKey} className="flex items-center gap-1.5">
               {index > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem>
                 {crumb.to ? (
                   <BreadcrumbLink asChild>
-                    <Link to={crumb.to}>{crumb.label}</Link>
+                    <Link to={crumb.to}>{t(crumb.labelKey)}</Link>
                   </BreadcrumbLink>
                 ) : (
-                  <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+                  <BreadcrumbPage>{t(crumb.labelKey)}</BreadcrumbPage>
                 )}
               </BreadcrumbItem>
             </span>
@@ -85,22 +89,28 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
                 }`}
               />
               <span className="sr-only">
-                {isLoading ? "Vérification des services…" : isUp ? "Services opérationnels" : "Services indisponibles"}
+                {isLoading
+                  ? t("layout.status.checking")
+                  : isUp
+                    ? t("layout.status.up")
+                    : t("layout.status.down")}
               </span>
             </span>
           </TooltipTrigger>
           <TooltipContent side="bottom">
             {isLoading
-              ? "Vérification en cours…"
+              ? t("layout.status.checkingInProgress")
               : isUp
-                ? "● Services opérationnels"
-                : "Certains services sont temporairement indisponibles."}
+                ? t("layout.status.upBullet")
+                : t("layout.status.downDetail")}
           </TooltipContent>
         </Tooltip>
 
+        <LanguageSwitcher />
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative" aria-label="Notifications">
+            <Button variant="ghost" size="icon" className="relative" aria-label={t("layout.notifications")}>
               <Bell className="h-[18px] w-[18px]" />
               {recentAlerts.length > 0 && (
                 <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-brand-600" />
@@ -108,18 +118,18 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-80">
-            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+            <DropdownMenuLabel>{t("layout.notifications")}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {recentAlerts.length === 0 ? (
-              <p className="px-2 py-3 text-sm text-ink-400">Aucune notification pour le moment.</p>
+              <p className="px-2 py-3 text-sm text-ink-400">{t("layout.noNotifications")}</p>
             ) : (
               recentAlerts.map(({ order, portfolioName, instrumentSymbol }) => (
                 <DropdownMenuItem key={order.id} className="flex-col items-start gap-0.5">
                   <span className="text-sm font-medium text-ink-800">
-                    {ORDER_ALERT_TITLE[order.status]}
+                    {orderAlertTitle[order.status]}
                   </span>
                   <span className="text-xs text-ink-400">
-                    {instrumentSymbol} · {portfolioName}
+                    {instrumentSymbol} - {portfolioName}
                   </span>
                 </DropdownMenuItem>
               ))
@@ -127,7 +137,7 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link to={ROUTES.alerts} className="justify-center text-sm font-medium text-brand-700">
-                Voir toutes les alertes
+                {t("layout.seeAllAlerts")}
               </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -145,19 +155,19 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel className="normal-case text-xs font-normal text-ink-400">
-              Mon compte
+              {t("layout.myAccount")}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link to={ROUTES.security}>
                 <Lock className="h-4 w-4" />
-                Sécurité
+                {t("nav.security")}
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link to={ROUTES.settings}>
                 <Settings className="h-4 w-4" />
-                Paramètres
+                {t("nav.settings")}
               </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>

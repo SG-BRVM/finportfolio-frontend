@@ -1,29 +1,31 @@
 import type { Portfolio } from "../../../../../domain/entities/Portfolio";
+import { useTranslation } from "react-i18next";
 import { formatDate } from "../../../../../shared/utils/formatDate";
 import { CashActions } from "./CashActions";
 
 export function PortfolioSummary({ portfolio }: { portfolio: Portfolio }) {
+  const { t } = useTranslation();
   return (
     <div className="rounded-xl border border-ink-100 bg-white p-5">
       <div className="mb-4 flex items-start justify-between gap-4">
         <dl className="grid flex-1 grid-cols-2 gap-4 sm:grid-cols-4">
           <div>
-            <dt className="text-xs font-medium uppercase tracking-wide text-ink-400">Nom</dt>
+            <dt className="text-xs font-medium uppercase tracking-wide text-ink-400">{t("common.name")}</dt>
             <dd className="mt-1 text-sm font-semibold text-ink-900">{portfolio.name}</dd>
           </div>
           <div>
-            <dt className="text-xs font-medium uppercase tracking-wide text-ink-400">Devise</dt>
+            <dt className="text-xs font-medium uppercase tracking-wide text-ink-400">{t("common.currency")}</dt>
             <dd className="mt-1 font-ledger text-sm text-ink-700">{portfolio.currency}</dd>
           </div>
           <div>
             <dt className="text-xs font-medium uppercase tracking-wide text-ink-400">
-              Investisseur
+              {t("investors.singular")}
             </dt>
             <dd className="mt-1 font-ledger text-sm text-ink-700">{portfolio.investorId}</dd>
           </div>
           <div>
             <dt className="text-xs font-medium uppercase tracking-wide text-ink-400">
-              Créé le
+              {t("common.createdOn")}
             </dt>
             <dd className="mt-1 font-ledger text-sm text-ink-700">
               {formatDate(portfolio.createdAt)}
@@ -34,7 +36,7 @@ export function PortfolioSummary({ portfolio }: { portfolio: Portfolio }) {
       <div className="flex items-center justify-between gap-4 border-t border-ink-100 pt-4">
         <div>
           <dt className="text-xs font-medium uppercase tracking-wide text-ink-400">
-            Capital disponible
+            {t("portfolios.availableCapital")}
           </dt>
           <dd className="mt-1 font-ledger text-lg font-semibold text-ink-900">
             {portfolio.cashBalance.format()}

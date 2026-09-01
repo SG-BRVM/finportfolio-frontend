@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Landmark, Wallet } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import type { Portfolio } from "../../../../../domain/entities/Portfolio";
 import { useDepositCapital, useWithdrawCapital } from "../../hooks/usePortfolios";
 import { getErrorMessage } from "../../utils/errorMessage";
@@ -16,14 +18,16 @@ import {
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 
-const schema = z.object({
-  amount: z
-    .string()
-    .min(1, "Le montant est requis.")
-    .refine((v) => Number(v) > 0, "Le montant doit être strictement positif."),
-});
+function buildSchema(t: TFunction) {
+  return z.object({
+    amount: z
+      .string()
+      .min(1, t("portfolios.cash.amountRequired"))
+      .refine((v) => Number(v) > 0, t("portfolios.cash.amountPositive")),
+  });
+}
 
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
 /**
  * CashActions - dépôt/retrait de capital sur un portefeuille.
@@ -33,6 +37,8 @@ type FormValues = z.infer<typeof schema>;
  * (voir OrderValidationService.ensure_buy_is_affordable côté backend).
  */
 export function CashActions({ portfolio }: { portfolio: Portfolio }) {
+  const { t, i18n } = useTranslation();
+  const schema = useMemo(() => buildSchema(t), [i18n.language]); // eslint-disable-line react-hooks/exhaustive-deps
   const [mode, setMode] = useState<"deposit" | "withdraw" | null>(null);
   const depositCapital = useDepositCapital();
   const withdrawCapital = useWithdrawCapital();
@@ -68,11 +74,11 @@ export function CashActions({ portfolio }: { portfolio: Portfolio }) {
       <div className="flex gap-2">
         <Button variant="success" size="sm" onClick={() => setMode("deposit")}>
           <Landmark className="h-4 w-4" />
-          Déposer
+          {t("portfolios.cash.deposit")}
         </Button>
         <Button variant="outline" size="sm" onClick={() => setMode("withdraw")}>
           <Wallet className="h-4 w-4" />
-          Retirer
+          {t("portfolios.cash.withdraw")}
         </Button>
       </div>
 
@@ -80,12 +86,12 @@ export function CashActions({ portfolio }: { portfolio: Portfolio }) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {mode === "deposit" ? "Déposer du capital" : "Retirer du capital"}
+              t(mode === "deposit" ? "portfolios.cash.depositTitle" : "portfolios.cash.withdrawTitle")
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={onSubmit} noValidate className="space-y-4">
             <div>
-              <Label>Montant ({portfolio.currency})</Label>
+              <Label>{t("common.amount")} ({portfolio.currency})</Label>
               <input
                 {...register("amount")}
                 type="text"
@@ -103,14 +109,14 @@ export function CashActions({ portfolio }: { portfolio: Portfolio }) {
             )}
             <DialogFooter>
               <Button type="button" variant="outline" size="sm" onClick={close}>
-                Annuler
+                {t("common.cancel")}
               </Button>
               <Button type="submit" size="sm" disabled={mutation.isPending}>
                 {mutation.isPending
-                  ? "En cours…"
+                  ? t("common.inProgress")
                   : mode === "deposit"
-                    ? "Déposer"
-                    : "Retirer"}
+                    ? t("portfolios.cash.deposit")
+                    : t("portfolios.cash.withdraw")}
               </Button>
             </DialogFooter>
           </form>

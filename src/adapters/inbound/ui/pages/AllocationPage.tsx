@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Briefcase } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { PageContainer } from "../components/layout/PageContainer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
 import { AllocationChart } from "../components/allocation/AllocationChart";
@@ -16,24 +17,25 @@ import { ROUTES } from "../../../../shared/constants/routes";
  * mockée).
  */
 export function AllocationPage() {
+  const { t } = useTranslation();
   const { positions, hasAnyPortfolio, isLoading } = useConsolidatedPortfolio();
 
   return (
     <PageContainer
-      title="Allocation"
-      description="La répartition de votre portefeuille par classe d'actifs et par secteur."
+      title={t("nav.allocation")}
+      description={t("allocation.pageDescription")}
     >
       {!isLoading && !hasAnyPortfolio ? (
         <EmptyState
           icon={Briefcase}
-          title="Aucune allocation à afficher"
-          description="Créez un portefeuille et investissez pour voir son allocation ici."
+          title={t("allocation.emptyTitle")}
+          description={t("allocation.emptyPortfolioDescription")}
           action={
             <Link
               to={ROUTES.portfolios}
               className="rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
             >
-              Voir mes portefeuilles
+              {t("orders.viewMyPortfolios")}
             </Link>
           }
         />
@@ -41,8 +43,8 @@ export function AllocationPage() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <Card>
             <CardHeader className="pb-0">
-              <CardTitle>Allocation du portefeuille</CardTitle>
-              <CardDescription>Répartition par classe d'actifs</CardDescription>
+              <CardTitle>{t("allocation.portfolioAllocation")}</CardTitle>
+              <CardDescription>{t("allocation.byAssetClass")}</CardDescription>
             </CardHeader>
             <CardContent>
               <AllocationChart positions={positions} isLoading={isLoading} />
@@ -51,8 +53,8 @@ export function AllocationPage() {
 
           <Card>
             <CardHeader className="pb-0">
-              <CardTitle>Exposition sectorielle</CardTitle>
-              <CardDescription>Répartition par secteur d'activité</CardDescription>
+              <CardTitle>{t("allocation.sectorExposureTitle")}</CardTitle>
+              <CardDescription>{t("allocation.bySector")}</CardDescription>
             </CardHeader>
             <CardContent>
               <SectorExposure positions={positions} isLoading={isLoading} />
@@ -63,11 +65,8 @@ export function AllocationPage() {
 
       <Card className="mt-6">
         <CardHeader className="pb-0">
-          <CardTitle>Simulateur d'allocation de capital</CardTitle>
-          <CardDescription>
-            Choisissez un capital et une stratégie de pondération pour voir combien d'unités de
-            chaque instrument acheter, selon les cours actuels.
-          </CardDescription>
+          <CardTitle>{t("allocation.simulatorTitle")}</CardTitle>
+          <CardDescription>{t("allocation.simulatorDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
           <AllocationSimulator />

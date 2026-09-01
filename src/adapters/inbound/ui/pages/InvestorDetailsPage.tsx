@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { BriefcaseBusiness } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { PageContainer } from "../components/layout/PageContainer";
 import { InvestorDetails } from "../components/investors/InvestorDetails";
 import { LoadingState } from "../components/common/LoadingState";
@@ -10,19 +11,20 @@ import { getErrorMessage } from "../utils/errorMessage";
 import { ROUTES } from "../../../../shared/constants/routes";
 
 export function InvestorDetailsPage() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const { data: investor, isLoading, isError, error, refetch } = useInvestor(id);
 
   return (
     <PageContainer
-      title={investor ? investor.name : "Détail investisseur"}
-      description="Coordonnées du client et accès à ses portefeuilles."
+      title={investor ? investor.name : t("investors.detailTitle")}
+      description={t("investors.detailDescription")}
       actions={
         investor && (
           <Button asChild variant="outline">
             <Link to={`${ROUTES.portfolios}?investorId=${investor.id}`}>
               <BriefcaseBusiness className="h-4 w-4" />
-              Nouveau portefeuille
+              {t("portfolios.newPortfolio")}
             </Link>
           </Button>
         )

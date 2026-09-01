@@ -5,14 +5,16 @@ import { formatDate } from "../../../../../shared/utils/formatDate";
 import { EmptyState } from "../common/EmptyState";
 import { OrderActions } from "../orders/OrderActions";
 import { ArrowLeftRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export function PortfolioOrdersTable({ orders }: { orders: Order[] }) {
+  const { t } = useTranslation();
   if (orders.length === 0) {
     return (
       <EmptyState
         icon={ArrowLeftRight}
-        title="Aucun ordre"
-        description="Aucun ordre n'a encore été passé sur ce portefeuille."
+        title={t("portfolios.orders.emptyTitle")}
+        description={t("portfolios.orders.emptyDescription")}
       />
     );
   }
@@ -22,12 +24,12 @@ export function PortfolioOrdersTable({ orders }: { orders: Order[] }) {
       <table className="w-full text-left text-sm">
         <thead className="border-b border-ink-100 bg-ink-50/60 text-xs uppercase tracking-wide text-ink-400">
           <tr>
-            <th className="px-4 py-3 font-medium">Sens</th>
-            <th className="px-4 py-3 font-medium">Quantité</th>
-            <th className="px-4 py-3 font-medium">Prix</th>
-            <th className="px-4 py-3 font-medium">Statut</th>
-            <th className="px-4 py-3 font-medium">Créé le</th>
-            <th className="px-4 py-3 font-medium text-right">Actions</th>
+            <th className="px-4 py-3 font-medium">{t("orders.form.side")}</th>
+            <th className="px-4 py-3 font-medium">{t("investments.quantity")}</th>
+            <th className="px-4 py-3 font-medium">{t("orders.price")}</th>
+            <th className="px-4 py-3 font-medium">{t("common.status")}</th>
+            <th className="px-4 py-3 font-medium">{t("common.createdOn")}</th>
+            <th className="px-4 py-3 font-medium text-right">{t("common.actions")}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-ink-100">

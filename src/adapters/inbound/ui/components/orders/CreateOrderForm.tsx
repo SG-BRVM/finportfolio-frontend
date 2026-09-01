@@ -2,6 +2,8 @@ import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { useCreateOrder } from "../../hooks/useOrders";
 import { usePortfolioSearch } from "../../hooks/usePortfolios";
 import { useInstrumentSearch, useInstrument } from "../../hooks/useInstruments";
@@ -16,21 +18,23 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 
-const schema = z.object({
-  portfolioId: z.string().min(1, "Le portefeuille est requis."),
-  instrumentId: z.string().min(1, "L'instrument est requis."),
-  side: z.enum(["BUY", "SELL"]),
-  quantity: z
-    .string()
-    .min(1, "La quantité est requise.")
-    .refine((v) => Number(v) > 0, "La quantité doit être strictement positive."),
-  price: z
-    .string()
-    .min(1, "Le prix est requis.")
-    .refine((v) => Number(v) > 0, "Le prix doit être strictement positif."),
-});
+function buildSchema(t: TFunction) {
+  return z.object({
+    portfolioId: z.string().min(1, t("orders.form.portfolioRequired")),
+    instrumentId: z.string().min(1, t("orders.form.instrumentRequired")),
+    side: z.enum(["BUY", "SELL"]),
+    quantity: z
+      .string()
+      .min(1, t("orders.form.quantityRequired"))
+      .refine((v) => Number(v) > 0, t("orders.form.quantityPositive")),
+    price: z
+      .string()
+      .min(1, t("orders.form.priceRequired"))
+      .refine((v) => Number(v) > 0, t("orders.form.pricePositive")),
+  });
+}
 
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
 interface CreateOrderFormProps {
   defaultPortfolioId?: string;
@@ -51,6 +55,8 @@ interface CreateOrderFormProps {
  * d'inventer un modèle de frais.
  */
 export function CreateOrderForm({ defaultPortfolioId, onCreated, onDone }: CreateOrderFormProps) {
+  const { t, i18n } = useTranslation();
+  const schema = useMemo(() => buildSchema(t), [i18n.language]); // eslint-disable-line react-hooks/exhaustive-deps
   const {
     register,
     handleSubmit,
@@ -123,8 +129,8 @@ export function CreateOrderForm({ defaultPortfolioId, onCreated, onDone }: Creat
             control={control}
             render={({ field }) => (
               <EntityAutocomplete
-                label="Portefeuille"
-                placeholder="Tapez le nom du portefeuille…"
+                label={t("common.portfolio")}
+                placeholder={t("orders.form.portfolioPlaceholder")}
                 value={field.value}
                 onChange={(id) => {
                   field.onChange(id);
@@ -148,8 +154,8 @@ export function CreateOrderForm({ defaultPortfolioId, onCreated, onDone }: Creat
             control={control}
             render={({ field }) => (
               <EntityAutocomplete
-                label="Instrument"
-                placeholder="Tapez le symbole ou le nom de l'instrument…"
+                label={t("investments.instrument")}
+                placeholder={t("orders.form.instrumentPlaceholder")}
                 value={field.value}
                 onChange={(id) => {
                   field.onChange(id);
@@ -158,7 +164,7 @@ export function CreateOrderForm({ defaultPortfolioId, onCreated, onDone }: Creat
                 onBlur={field.onBlur}
                 options={(instrumentOptions ?? []).map((i) => ({
                   id: i.id,
-                  label: `${i.symbol} — ${i.name}`,
+                  label: `${i.symbol} - ${i.name}`,
                   sublabel: i.currency,
                 }))}
                 isLoading={isSearchingInstruments}
@@ -169,7 +175,7 @@ export function CreateOrderForm({ defaultPortfolioId, onCreated, onDone }: Creat
         </div>
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <Label>Sens</Label>
+            <Label>{t("orders.form.side")}</Label>
             <Controller
               name="side"
               control={control}
@@ -185,7 +191,7 @@ export function CreateOrderForm({ defaultPortfolioId, onCreated, onDone }: Creat
                       value={side}
                       tone={side === "BUY" ? "buy" : "sell"}
                     >
-                      {side === "BUY" ? "Achat" : "Vente"}
+                      {side === "BUY" ? t("orders.form.buy") : t("orders.form.sell")}
                     </ToggleGroupItem>
                   ))}
                 </ToggleGroup>
@@ -193,7 +199,7 @@ export function CreateOrderForm({ defaultPortfolioId, onCreated, onDone }: Creat
             />
           </div>
           <div>
-            <Label>Quantité</Label>
+            <Label>{t("investments.quantity")}</Label>
             <Input
               {...register("quantity")}
               type="text"
@@ -206,7 +212,7 @@ export function CreateOrderForm({ defaultPortfolioId, onCreated, onDone }: Creat
             )}
           </div>
           <div>
-            <Label>Prix</Label>
+            <Label>{t("orders.price")}</Label>
             <Input
               {...register("price")}
               type="text"
@@ -221,15 +227,15 @@ export function CreateOrderForm({ defaultPortfolioId, onCreated, onDone }: Creat
         {summary && (
           <div className="space-y-2 rounded-lg border border-ink-100 bg-ink-50/60 p-4 text-sm">
             <div className="flex items-center justify-between text-ink-500">
-              <span>Montant estimé</span>
+              <span>{t("orders.form.estimatedAmount")}</span>
               <span className="font-ledger text-ink-800">{summary.estimatedAmount.format()}</span>
             </div>
             <div className="flex items-center justify-between text-ink-500">
-              <span>Frais</span>
+              <span>{t("orders.form.fees")}</span>
               <span className="font-ledger text-ink-800">{summary.fees.format()}</span>
             </div>
             <div className="flex items-center justify-between border-t border-ink-200 pt-2 font-semibold text-ink-900">
-              <span>Montant total</span>
+              <span>{t("orders.form.totalAmount")}</span>
               <span className="font-ledger">{summary.total.format()}</span>
             </div>
           </div>
@@ -239,23 +245,25 @@ export function CreateOrderForm({ defaultPortfolioId, onCreated, onDone }: Creat
           <p className="text-sm text-rose-600">{getErrorMessage(createOrder.error)}</p>
         )}
         <Button type="submit" disabled={createOrder.isPending} className="w-full">
-          Confirmer l'ordre
+          {t("orders.form.confirmOrder")}
         </Button>
       </form>
 
       <ConfirmDialog
         open={pendingValues !== null}
-        title="Confirmer votre ordre ?"
+        title={t("orders.form.confirmDialogTitle")}
         description={
           pendingValues
-            ? `Vous êtes sur le point de passer un ordre ${
-                pendingValues.side === "BUY" ? "d'achat" : "de vente"
-              } de ${pendingValues.quantity} titre(s)${
-                summary ? ` pour un montant total de ${summary.total.format()}` : ""
-              }. Cette action créera un ordre en attente d'exécution.`
+            ? t("orders.form.confirmDialogDescription", {
+                side: pendingValues.side === "BUY" ? t("orders.form.buying") : t("orders.form.selling"),
+                quantity: pendingValues.quantity,
+                totalSentence: summary
+                  ? t("orders.form.forTotalAmount", { total: summary.total.format() })
+                  : "",
+              })
             : ""
         }
-        confirmLabel="Confirmer l'ordre"
+        confirmLabel={t("orders.form.confirmOrder")}
         pending={createOrder.isPending}
         onConfirm={handleConfirm}
         onCancel={() => setPendingValues(null)}

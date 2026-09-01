@@ -3,6 +3,7 @@ import type { FinancialInstrument } from "../../../../../domain/entities/Financi
 import { formatQuantity } from "../../../../../shared/utils/formatNumber";
 import { EmptyState } from "../common/EmptyState";
 import { Layers } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface PortfolioPositionsTableProps {
   positions: Position[];
@@ -11,12 +12,13 @@ interface PortfolioPositionsTableProps {
 
 /** PortfolioPositionsTable - positions détenues, avec symbole résolu via les instruments chargés. */
 export function PortfolioPositionsTable({ positions, instruments }: PortfolioPositionsTableProps) {
+  const { t } = useTranslation();
   if (positions.length === 0) {
     return (
       <EmptyState
         icon={Layers}
-        title="Aucune position"
-        description="Ce portefeuille ne détient encore aucun instrument."
+        title={t("portfolios.positions.emptyTitle")}
+        description={t("portfolios.positions.emptyDescription")}
       />
     );
   }
@@ -26,10 +28,10 @@ export function PortfolioPositionsTable({ positions, instruments }: PortfolioPos
       <table className="w-full text-left text-sm">
         <thead className="border-b border-ink-100 bg-ink-50/60 text-xs uppercase tracking-wide text-ink-400">
           <tr>
-            <th className="px-4 py-3 font-medium">Instrument</th>
-            <th className="px-4 py-3 font-medium">Quantité</th>
-            <th className="px-4 py-3 font-medium">Prix moyen</th>
-            <th className="px-4 py-3 font-medium">Prix courant</th>
+            <th className="px-4 py-3 font-medium">{t("investments.instrument")}</th>
+            <th className="px-4 py-3 font-medium">{t("investments.quantity")}</th>
+            <th className="px-4 py-3 font-medium">{t("investments.averagePrice")}</th>
+            <th className="px-4 py-3 font-medium">{t("portfolios.positions.currentPrice")}</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-ink-100">

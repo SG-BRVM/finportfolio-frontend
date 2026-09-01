@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { ChevronRight } from "lucide-react";
 import { NAV_GROUPS, getActiveGroupId, type NavItem } from "./navigation";
@@ -26,6 +27,7 @@ interface SidebarNavigationProps {
  * sidebar) - sans jamais refermer une section déjà ouverte par ailleurs.
  */
 export function SidebarNavigation({ onNavigate, className }: SidebarNavigationProps) {
+  const { t } = useTranslation();
   const location = useLocation();
   const activeGroupId = getActiveGroupId(location.pathname);
 
@@ -40,8 +42,8 @@ export function SidebarNavigation({ onNavigate, className }: SidebarNavigationPr
     }
   }, [activeGroupId]);
 
-  const directGroups = NAV_GROUPS.filter((group) => !group.label);
-  const sectionGroups = NAV_GROUPS.filter((group) => group.label);
+  const directGroups = NAV_GROUPS.filter((group) => !group.labelKey);
+  const sectionGroups = NAV_GROUPS.filter((group) => group.labelKey);
 
   return (
     <nav className={cn("space-y-1", className)}>
@@ -70,7 +72,7 @@ export function SidebarNavigation({ onNavigate, className }: SidebarNavigationPr
                 >
                   <span className="flex items-center gap-2">
                     {SectionIcon && <SectionIcon className="h-3.5 w-3.5 shrink-0 text-ink-300" aria-hidden="true" />}
-                    {group.label}
+                    {t(group.labelKey!)}
                   </span>
                   <ChevronRight
                     className={cn(
@@ -99,7 +101,8 @@ export function SidebarNavigation({ onNavigate, className }: SidebarNavigationPr
 }
 
 function SidebarNavLink({ item, onNavigate }: { item: NavItem; onNavigate?: () => void }) {
-  const { to, label, icon: Icon, end } = item;
+  const { t } = useTranslation();
+  const { to, labelKey, icon: Icon, end } = item;
 
   return (
     <NavLink
@@ -121,7 +124,7 @@ function SidebarNavLink({ item, onNavigate }: { item: NavItem; onNavigate?: () =
               isActive ? "text-brand-600" : "text-ink-400 group-hover/item:text-ink-600",
             )}
           />
-          {label}
+          {t(labelKey)}
         </>
       )}
     </NavLink>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogTrigger,
@@ -23,6 +24,7 @@ interface CreateOrderDialogProps {
  * automatiquement une fois l'ordre confirmé.
  */
 export function CreateOrderDialog({ defaultPortfolioId, onCreated }: CreateOrderDialogProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   return (
@@ -30,16 +32,14 @@ export function CreateOrderDialog({ defaultPortfolioId, onCreated }: CreateOrder
       <DialogTrigger asChild>
         <Button size="sm" className="gap-1.5">
           <Plus className="h-4 w-4" />
-          Nouvel ordre
+          {t("orders.newOrder")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Nouvel ordre</DialogTitle>
+          <DialogTitle>{t("orders.newOrder")}</DialogTitle>
         </DialogHeader>
-        <DialogDescription>
-          Passez un ordre d'achat ou de vente sur l'un de vos portefeuilles.
-        </DialogDescription>
+        <DialogDescription>{t("orders.newOrderDescription")}</DialogDescription>
         <CreateOrderForm
           defaultPortfolioId={defaultPortfolioId}
           onCreated={onCreated}

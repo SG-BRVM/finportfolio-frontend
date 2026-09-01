@@ -6,7 +6,8 @@ import { Alert, AlertTitle, AlertDescription } from "../components/ui/alert";
 import { Skeleton } from "../components/ui/skeleton";
 import { EmptyState } from "../components/common/EmptyState";
 import { useConsolidatedPortfolio } from "../hooks/useConsolidatedPortfolio";
-import { SECTOR_LABELS } from "../../../../domain/enums/Sector";
+import { useSectorLabels } from "../components/common/useSectorLabels";
+import { useTranslation } from "react-i18next";
 import { formatPercentage } from "../../../../shared/utils/formatPercentage";
 import { ROUTES } from "../../../../shared/constants/routes";
 
@@ -22,6 +23,8 @@ import { ROUTES } from "../../../../shared/constants/routes";
  * supprimé), ont été retirés plutôt que remplacés faute de donnée réelle.
  */
 export function RiskPage() {
+  const { t } = useTranslation();
+  const sectorLabels = useSectorLabels();
   const { positions, totalValuation, hasAnyPortfolio, isLoading } = useConsolidatedPortfolio();
 
   let concentration: { sector: string; percentage: number } | null = null;
@@ -35,7 +38,7 @@ export function RiskPage() {
     for (const p of positions) {
       if (!p.instrument || !p.marketValue || !p.instrument.sector) continue;
       const value = p.marketValue.amount.toNumber();
-      const sector = SECTOR_LABELS[p.instrument.sector];
+      const sector = sectorLabels[p.instrument.sector];
       sectorTotals.set(sector, (sectorTotals.get(sector) ?? 0) + value);
       if (p.instrument.instrumentType === "STOCK") equityValue += value;
     }
@@ -47,20 +50,20 @@ export function RiskPage() {
 
   return (
     <PageContainer
-      title="Profil de risque"
-      description="Concentration sectorielle et exposition de votre patrimoine."
+      title={t("risk.pageTitle")}
+      description={t("risk.pageDescription")}
     >
       {!isLoading && !hasAnyPortfolio ? (
         <EmptyState
           icon={Briefcase}
-          title="Aucun profil de risque à afficher"
-          description="Créez un portefeuille et investissez pour voir votre profil de risque ici."
+          title={t("risk.emptyTitle")}
+          description={t("risk.emptyDescription")}
           action={
             <Link
               to={ROUTES.portfolios}
               className="rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
             >
-              Voir mes portefeuilles
+              {t("orders.viewMyPortfolios")}
             </Link>
           }
         />
@@ -68,24 +71,24 @@ export function RiskPage() {
         <div className="space-y-6">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <MetricCard
-              label="Concentration"
+              label={t("risk.concentration")}
               value={
                 isLoading
                   ? undefined
                   : concentration
                     ? formatPercentage(concentration.percentage, { forceSign: false, decimals: 1 })
-                    : "—"
+                    : "-"
               }
               hint={concentration?.sector}
             />
             <MetricCard
-              label="Exposition actions"
+              label={t("risk.equityExposure")}
               value={
                 isLoading
                   ? undefined
                   : equityExposurePercentage !== null
                     ? formatPercentage(equityExposurePercentage, { forceSign: false, decimals: 1 })
-                    : "—"
+                    : "-"
               }
             />
           </div>
@@ -94,11 +97,12 @@ export function RiskPage() {
             <Alert variant="warning">
               <TriangleAlert />
               <div>
-                <AlertTitle>Points d'attention</AlertTitle>
+                <AlertTitle>{t("risk.attentionPoints")}</AlertTitle>
                 <AlertDescription>
-                  Forte exposition au secteur {concentration.sector.toLowerCase()} (
-                  {formatPercentage(concentration.percentage, { forceSign: false, decimals: 1 })} du
-                  patrimoine).
+                  {t("risk.highExposure", {
+                    sector: concentration.sector.toLowerCase(),
+                    percentage: formatPercentage(concentration.percentage, { forceSign: false, decimals: 1 }),
+                  })}
                 </AlertDescription>
               </div>
             </Alert>
@@ -108,11 +112,11 @@ export function RiskPage() {
             <Alert variant="brand">
               <Lightbulb />
               <div>
-                <AlertTitle>Suggestion</AlertTitle>
+                <AlertTitle>{t("risk.suggestion")}</AlertTitle>
                 <AlertDescription>
                   {concentration && concentration.percentage >= 30
-                    ? `Une diversification vers d'autres secteurs que ${concentration.sector.toLowerCase()} pourrait réduire le risque de concentration.`
-                    : "Votre patrimoine reste correctement diversifié entre secteurs pour le moment."}
+                    ? t("risk.diversificationSuggestion", { sector: concentration.sector.toLowerCase() })
+                    : t("risk.wellDiversified")}
                 </AlertDescription>
               </div>
             </Alert>

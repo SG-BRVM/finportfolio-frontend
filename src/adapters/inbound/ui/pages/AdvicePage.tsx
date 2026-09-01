@@ -6,7 +6,8 @@ import { Badge } from "../components/ui/badge";
 import { Skeleton } from "../components/ui/skeleton";
 import { EmptyState } from "../components/common/EmptyState";
 import { useConsolidatedPortfolio } from "../hooks/useConsolidatedPortfolio";
-import { SECTOR_LABELS } from "../../../../domain/enums/Sector";
+import { useSectorLabels } from "../components/common/useSectorLabels";
+import { useTranslation } from "react-i18next";
 import { toRatioPercentage } from "../../../../shared/utils/computeRatio";
 import { formatPercentage } from "../../../../shared/utils/formatPercentage";
 import { ROUTES } from "../../../../shared/constants/routes";
@@ -18,6 +19,8 @@ import { ROUTES } from "../../../../shared/constants/routes";
  * FinancialInstrument.sector) plutôt qu'un texte marketing générique.
  */
 export function AdvicePage() {
+  const { t } = useTranslation();
+  const sectorLabels = useSectorLabels();
   const {
     positions,
     totalValue,
@@ -34,7 +37,7 @@ export function AdvicePage() {
     const total = totalValuation.amount.toNumber();
     for (const p of positions) {
       if (!p.instrument || !p.marketValue || !p.instrument.sector) continue;
-      const sector = SECTOR_LABELS[p.instrument.sector];
+      const sector = sectorLabels[p.instrument.sector];
       const value = p.marketValue.amount.toNumber();
       sectorTotals.set(sector, (sectorTotals.get(sector) ?? 0) + value);
     }
@@ -47,20 +50,20 @@ export function AdvicePage() {
 
   return (
     <PageContainer
-      title="Conseils pour votre portefeuille"
-      description="Des repères construits à partir de votre situation actuelle."
+      title={t("advice.pageTitle")}
+      description={t("advice.pageDescription")}
     >
       {!isLoading && !hasAnyPortfolio ? (
         <EmptyState
           icon={Briefcase}
-          title="Aucun conseil pour le moment"
-          description="Créez un portefeuille et investissez pour recevoir des conseils personnalisés."
+          title={t("advice.emptyTitle")}
+          description={t("advice.emptyDescription")}
           action={
             <Link
               to={ROUTES.portfolios}
               className="rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
             >
-              Voir mes portefeuilles
+              {t("orders.viewMyPortfolios")}
             </Link>
           }
         />
@@ -74,21 +77,24 @@ export function AdvicePage() {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           <AdviceCard
             icon={PieChart}
-            title="Diversification"
-            badge={concentration && concentration.percentage >= 30 ? "À surveiller" : "Correct"}
+            title={t("advice.diversification")}
+            badge={concentration && concentration.percentage >= 30 ? t("advice.toWatch") : t("advice.correct")}
             badgeTone={concentration && concentration.percentage >= 30 ? "warning" : "success"}
             description={
               concentration
-                ? `Votre portefeuille présente une exposition de ${formatPercentage(concentration.percentage, { forceSign: false, decimals: 1 })} au secteur ${concentration.sector.toLowerCase()}.`
-                : "Investissez pour obtenir une lecture de votre diversification."
+                ? t("advice.diversificationDescription", {
+                    percentage: formatPercentage(concentration.percentage, { forceSign: false, decimals: 1 }),
+                    sector: concentration.sector.toLowerCase(),
+                  })
+                : t("advice.diversificationEmptyDescription")
             }
           />
           <AdviceCard
             icon={TrendingUp}
-            title="Performance"
+            title={t("nav.performance")}
             badge={
               performancePercentage === null
-                ? "—"
+                ? "-"
                 : formatPercentage(performancePercentage, { decimals: 2 })
             }
             badgeTone={
@@ -96,23 +102,28 @@ export function AdvicePage() {
             }
             description={
               performancePercentage === null
-                ? "Votre performance n'est pas encore calculable."
-                : `Votre portefeuille ${performancePercentage >= 0 ? "progresse" : "recule"} de ${formatPercentage(Math.abs(performancePercentage), { forceSign: false, decimals: 2 })} sur vos positions actuelles.`
+                ? t("advice.performanceEmptyDescription")
+                : t("advice.performanceDescription", {
+                    direction: performancePercentage >= 0 ? t("advice.progressing") : t("advice.declining"),
+                    percentage: formatPercentage(Math.abs(performancePercentage), { forceSign: false, decimals: 2 }),
+                  })
             }
           />
           <AdviceCard
             icon={Wallet}
-            title="Liquidités"
+            title={t("dashboard.liquidity")}
             badge={
               liquidityPercentage === null
-                ? "—"
+                ? "-"
                 : formatPercentage(liquidityPercentage, { forceSign: false, decimals: 1 })
             }
             badgeTone="neutral"
             description={
               liquidityPercentage === null
-                ? "Votre niveau de liquidités n'est pas encore calculable."
-                : `Votre niveau de liquidités représente ${formatPercentage(liquidityPercentage, { forceSign: false, decimals: 1 })} de votre patrimoine.`
+                ? t("advice.liquidityEmptyDescription")
+                : t("advice.liquidityDescription", {
+                    percentage: formatPercentage(liquidityPercentage, { forceSign: false, decimals: 1 }),
+                  })
             }
           />
         </div>

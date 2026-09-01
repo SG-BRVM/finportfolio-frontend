@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogTrigger,
@@ -19,6 +20,7 @@ import { useAddGoal } from "../../hooks/useGoals";
  * POST /api/v1/goals (voir hooks/useGoals.ts).
  */
 export function AddGoalDialog() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
@@ -57,29 +59,27 @@ export function AddGoalDialog() {
       <DialogTrigger asChild>
         <Button size="sm" className="gap-1.5">
           <Plus className="h-4 w-4" />
-          Ajouter un objectif
+          {t("goals.addGoal")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Ajouter un objectif</DialogTitle>
+          <DialogTitle>{t("goals.addGoal")}</DialogTitle>
         </DialogHeader>
-        <DialogDescription>
-          Définissez un nouvel objectif financier à suivre dans le temps.
-        </DialogDescription>
+        <DialogDescription>{t("goals.addGoalDescription")}</DialogDescription>
 
         <div className="space-y-4">
           <div>
-            <Label>Nom de l'objectif</Label>
+            <Label>{t("goals.goalName")}</Label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Ex. Voyage, études des enfants…"
+              placeholder={t("goals.goalNamePlaceholder")}
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label>Montant déjà atteint (XOF)</Label>
+              <Label>{t("goals.currentAmountLabel")} (XOF)</Label>
               <Input
                 type="text"
                 inputMode="decimal"
@@ -90,7 +90,7 @@ export function AddGoalDialog() {
               />
             </div>
             <div>
-              <Label>Montant cible (XOF)</Label>
+              <Label>{t("goals.targetAmountLabel")} (XOF)</Label>
               <Input
                 type="text"
                 inputMode="decimal"
@@ -105,10 +105,10 @@ export function AddGoalDialog() {
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => setOpen(false)}>
-            Annuler
+            {t("common.cancel")}
           </Button>
           <Button onClick={handleSubmit} disabled={!isValid || addGoal.isPending}>
-            {addGoal.isPending ? "En cours…" : "Ajouter l'objectif"}
+            {addGoal.isPending ? t("common.inProgress") : t("goals.addGoal")}
           </Button>
         </DialogFooter>
       </DialogContent>

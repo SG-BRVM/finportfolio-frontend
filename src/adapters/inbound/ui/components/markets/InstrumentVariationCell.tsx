@@ -13,7 +13,7 @@ interface InstrumentVariationCellProps {
  * la dernière entrée `field === "current_price"` et on compare
  * `newValue`/`oldValue`.
  *
- * `null` (→ PerformanceBadge affiche "—") si l'instrument n'a encore
+ * `null` (→ PerformanceBadge affiche "-") si l'instrument n'a encore
  * jamais été repriced (aucun historique de prix) : on n'invente pas de
  * variation là où le backend n'en a constaté aucune.
  */

@@ -1,18 +1,23 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { useCreateInvestor } from "../../hooks/useInvestors";
 import { getErrorMessage } from "../../utils/errorMessage";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
-const schema = z.object({
-  name: z.string().min(1, "Le nom est requis."),
-  email: z.string().min(1, "L'email est requis.").email("Adresse email invalide."),
-});
+function buildSchema(t: TFunction) {
+  return z.object({
+    name: z.string().min(1, t("investors.form.nameRequired")),
+    email: z.string().min(1, t("investors.form.emailRequired")).email(t("investors.form.emailInvalid")),
+  });
+}
 
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
 interface InvestorFormProps {
   onCreated?: (investorId: string) => void;
@@ -20,6 +25,8 @@ interface InvestorFormProps {
 
 /** InvestorForm - création d'un investisseur. Validation Zod + React Hook Form. */
 export function InvestorForm({ onCreated }: InvestorFormProps) {
+  const { t, i18n } = useTranslation();
+  const schema = useMemo(() => buildSchema(t), [i18n.language]); // eslint-disable-line react-hooks/exhaustive-deps
   const {
     register,
     handleSubmit,
@@ -37,12 +44,12 @@ export function InvestorForm({ onCreated }: InvestorFormProps) {
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-4 rounded-xl border border-ink-100 bg-white p-5">
       <div>
-        <Label htmlFor="investor-name">Nom</Label>
+        <Label htmlFor="investor-name">{t("common.name")}</Label>
         <Input id="investor-name" {...register("name")} type="text" placeholder="Adama Coulibaly" />
         {errors.name && <p className="mt-1 text-xs text-rose-600">{errors.name.message}</p>}
       </div>
       <div>
-        <Label htmlFor="investor-email">Email</Label>
+        <Label htmlFor="investor-email">{t("common.email")}</Label>
         <Input id="investor-email" {...register("email")} type="email" placeholder="adama@example.com" />
         {errors.email && <p className="mt-1 text-xs text-rose-600">{errors.email.message}</p>}
       </div>
@@ -50,7 +57,7 @@ export function InvestorForm({ onCreated }: InvestorFormProps) {
         <p className="text-sm text-rose-600">{getErrorMessage(createInvestor.error)}</p>
       )}
       <Button type="submit" disabled={createInvestor.isPending} className="w-full">
-        {createInvestor.isPending ? "Création…" : "Créer l'investisseur"}
+        {createInvestor.isPending ? t("investors.form.creating") : t("investors.create")}
       </Button>
     </form>
   );

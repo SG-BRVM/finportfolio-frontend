@@ -26,7 +26,8 @@ import { ROUTES } from "../../../../../shared/constants/routes";
 
 export interface NavItem {
   to: string;
-  label: string;
+  /** Clé de traduction (namespace "nav.*"), résolue avec t() par les consommateurs. */
+  labelKey: string;
   icon: LucideIcon;
   end?: boolean;
 }
@@ -35,7 +36,7 @@ export interface NavGroup {
   /** Identifiant stable utilisé comme value d'AccordionItem (sections repliables). */
   id: string;
   /** Omis pour la section de tête (Tableau de bord) : rendue en lien direct, hors accordéon. */
-  label?: string;
+  labelKey?: string;
   /** Icône affichée devant le titre de la section (groupes repliables uniquement). */
   icon?: LucideIcon;
   items: NavItem[];
@@ -51,76 +52,76 @@ export interface NavGroup {
  * technique de santé applicative (health check) reste accessible par sa
  * route sans apparaître ici - voir ROUTES.health.
  *
- * Les groupes avec `label` sont rendus comme des sections repliables
+ * Les groupes avec `labelKey` sont rendus comme des sections repliables
  * (chaque section conserve son propre état ouvert/fermé - voir
  * SidebarNavigation).
  */
 export const NAV_GROUPS: NavGroup[] = [
   {
     id: "dashboard",
-    items: [{ to: ROUTES.dashboard, label: "Tableau de bord", icon: LayoutDashboard, end: true }],
+    items: [{ to: ROUTES.dashboard, labelKey: "nav.dashboard", icon: LayoutDashboard, end: true }],
   },
   {
     id: "clients",
-    label: "Clients",
+    labelKey: "nav.groups.clients",
     icon: Users,
-    items: [{ to: ROUTES.investors, label: "Investisseurs", icon: Users }],
+    items: [{ to: ROUTES.investors, labelKey: "nav.investors", icon: Users }],
   },
   {
     id: "portfolio",
-    label: "Portefeuille",
+    labelKey: "nav.groups.portfolio",
     icon: Wallet,
     items: [
-      { to: ROUTES.portfolios, label: "Mes portefeuilles", icon: BriefcaseBusiness },
-      { to: ROUTES.investments, label: "Mes investissements", icon: TrendingUp },
-      { to: ROUTES.performance, label: "Performance", icon: ChartNoAxesCombined },
-      { to: ROUTES.allocation, label: "Allocation", icon: PieChart },
-      { to: ROUTES.risk, label: "Risque", icon: ShieldCheck },
+      { to: ROUTES.portfolios, labelKey: "nav.portfolios", icon: BriefcaseBusiness },
+      { to: ROUTES.investments, labelKey: "nav.investments", icon: TrendingUp },
+      { to: ROUTES.performance, labelKey: "nav.performance", icon: ChartNoAxesCombined },
+      { to: ROUTES.allocation, labelKey: "nav.allocation", icon: PieChart },
+      { to: ROUTES.risk, labelKey: "nav.risk", icon: ShieldCheck },
     ],
   },
   {
     id: "operations",
-    label: "Opérations",
+    labelKey: "nav.groups.operations",
     icon: ArrowLeftRight,
     items: [
-      { to: ROUTES.orders, label: "Ordres", icon: ArrowLeftRight },
-      { to: ROUTES.transactions, label: "Transactions", icon: Receipt },
+      { to: ROUTES.orders, labelKey: "nav.orders", icon: ArrowLeftRight },
+      { to: ROUTES.transactions, labelKey: "nav.transactions", icon: Receipt },
     ],
   },
   {
     id: "markets",
-    label: "Marchés",
+    labelKey: "nav.groups.markets",
     icon: Landmark,
     items: [
-      { to: ROUTES.markets, label: "Marchés", icon: Landmark },
-      { to: ROUTES.instruments, label: "Instruments", icon: LineChart },
+      { to: ROUTES.markets, labelKey: "nav.markets", icon: Landmark },
+      { to: ROUTES.instruments, labelKey: "nav.instruments", icon: LineChart },
     ],
   },
   {
     id: "planning",
-    label: "Planification",
+    labelKey: "nav.groups.planning",
     icon: Compass,
     items: [
-      { to: ROUTES.goals, label: "Objectifs", icon: Target },
-      { to: ROUTES.advice, label: "Conseils", icon: Lightbulb },
+      { to: ROUTES.goals, labelKey: "nav.goals", icon: Target },
+      { to: ROUTES.advice, labelKey: "nav.advice", icon: Lightbulb },
     ],
   },
   {
     id: "communication",
-    label: "Communication",
+    labelKey: "nav.groups.communication",
     icon: MessageSquare,
     items: [
-      { to: ROUTES.alerts, label: "Alertes", icon: Bell },
-      { to: ROUTES.documents, label: "Documents", icon: FileText },
+      { to: ROUTES.alerts, labelKey: "nav.alerts", icon: Bell },
+      { to: ROUTES.documents, labelKey: "nav.documents", icon: FileText },
     ],
   },
   {
     id: "account",
-    label: "Compte",
+    labelKey: "nav.groups.account",
     icon: UserCog,
     items: [
-      { to: ROUTES.security, label: "Sécurité", icon: Lock },
-      { to: ROUTES.settings, label: "Paramètres", icon: Settings },
+      { to: ROUTES.security, labelKey: "nav.security", icon: Lock },
+      { to: ROUTES.settings, labelKey: "nav.settings", icon: Settings },
     ],
   },
 ];
@@ -129,7 +130,7 @@ export const NAV_ITEMS: NavItem[] = NAV_GROUPS.flatMap((group) => group.items);
 
 /**
  * getActiveGroupId - détermine quelle section repliable (NavGroup avec
- * label) contient la route courante, pour l'ouvrir automatiquement dans
+ * labelKey) contient la route courante, pour l'ouvrir automatiquement dans
  * la sidebar (y compris après un refresh, la section s'ouvre à nouveau
  * grâce à la route active - aucun état n'a besoin d'être persisté).
  * Retourne undefined pour le tableau de bord ou une route hors nav.
@@ -137,13 +138,13 @@ export const NAV_ITEMS: NavItem[] = NAV_GROUPS.flatMap((group) => group.items);
 export function getActiveGroupId(pathname: string): string | undefined {
   const group = NAV_GROUPS.find(
     (candidate) =>
-      candidate.label && candidate.items.some((item) => item.to !== ROUTES.dashboard && pathname.startsWith(item.to)),
+      candidate.labelKey && candidate.items.some((item) => item.to !== ROUTES.dashboard && pathname.startsWith(item.to)),
   );
   return group?.id;
 }
 
 export interface BreadcrumbCrumb {
-  label: string;
+  labelKey: string;
   to?: string;
 }
 
@@ -156,20 +157,20 @@ export interface BreadcrumbCrumb {
  */
 export function getBreadcrumbTrail(pathname: string): BreadcrumbCrumb[] {
   if (pathname === ROUTES.dashboard) {
-    return [{ label: "Tableau de bord" }];
+    return [{ labelKey: "nav.dashboard" }];
   }
 
   const item = NAV_ITEMS.find((candidate) => candidate.to !== ROUTES.dashboard && pathname.startsWith(candidate.to));
   if (!item) {
-    return [{ label: "FinPortfolio" }];
+    return [{ labelKey: "common.appName" }];
   }
 
   if (pathname === item.to) {
-    return [{ label: item.label }];
+    return [{ labelKey: item.labelKey }];
   }
 
   return [
-    { label: item.label, to: item.to },
-    { label: "Détail" },
+    { labelKey: item.labelKey, to: item.to },
+    { labelKey: "common.detail" },
   ];
 }

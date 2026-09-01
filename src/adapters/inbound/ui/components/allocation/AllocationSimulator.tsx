@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Calculator } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -19,11 +20,6 @@ import { useInstruments, useSimulateAllocation } from "../../hooks/useInstrument
 import { formatPercentage } from "../../../../../shared/utils/formatPercentage";
 import type { AllocationWeightingStrategy } from "../../../../../domain/entities/AllocationSimulation";
 
-const STRATEGY_LABELS: Record<AllocationWeightingStrategy, string> = {
-  EQUAL: "Équipondération",
-  CUSTOM: "Pondération personnalisée",
-};
-
 /**
  * AllocationSimulator - simule l'achat d'un panier d'instruments pour un
  * capital et une stratégie de pondération donnés (équipondération ou
@@ -33,6 +29,11 @@ const STRATEGY_LABELS: Record<AllocationWeightingStrategy, string> = {
  * composant se contente d'assembler la requête et d'afficher le résultat.
  */
 export function AllocationSimulator() {
+  const { t } = useTranslation();
+  const strategyLabels: Record<AllocationWeightingStrategy, string> = {
+    EQUAL: t("allocation.simulator.equalWeighting"),
+    CUSTOM: t("allocation.simulator.customWeighting"),
+  };
   const { data: instruments, isLoading: isLoadingInstruments } = useInstruments();
   const simulate = useSimulateAllocation();
 
@@ -111,7 +112,7 @@ export function AllocationSimulator() {
     <div className="space-y-5">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div>
-          <Label htmlFor="allocation-capital">Capital à investir</Label>
+          <Label htmlFor="allocation-capital">{t("allocation.simulator.capitalToInvest")}</Label>
           <Input
             id="allocation-capital"
             type="number"
@@ -124,10 +125,10 @@ export function AllocationSimulator() {
         </div>
 
         <div>
-          <Label>Devise</Label>
+          <Label>{t("common.currency")}</Label>
           <Select value={currency} onValueChange={setCurrency}>
             <SelectTrigger>
-              <SelectValue placeholder="Devise" />
+              <SelectValue placeholder={t("common.currency")} />
             </SelectTrigger>
             <SelectContent>
               {currencies.map((c) => (
@@ -140,7 +141,7 @@ export function AllocationSimulator() {
         </div>
 
         <div>
-          <Label>Stratégie de pondération</Label>
+          <Label>{t("allocation.simulator.weightingStrategy")}</Label>
           <Select
             value={strategy}
             onValueChange={(v) => setStrategy(v as AllocationWeightingStrategy)}
@@ -149,9 +150,9 @@ export function AllocationSimulator() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {(Object.keys(STRATEGY_LABELS) as AllocationWeightingStrategy[]).map((s) => (
+              {(Object.keys(strategyLabels) as AllocationWeightingStrategy[]).map((s) => (
                 <SelectItem key={s} value={s}>
-                  {STRATEGY_LABELS[s]}
+                  {strategyLabels[s]}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -163,20 +164,21 @@ export function AllocationSimulator() {
         <Skeleton className="h-40 w-full rounded-xl" />
       ) : instrumentsInCurrency.length === 0 ? (
         <EmptyState
-          title="Aucun instrument disponible"
-          description="Aucun instrument n'est enregistré pour cette devise."
+          title={t("allocation.simulator.noInstrumentsTitle")}
+          description={t("allocation.simulator.noInstrumentsDescription")}
         />
       ) : (
         <div>
           <div className="mb-2 flex items-center justify-between">
             <div>
               <p className="text-sm font-semibold text-ink-800">
-                Instruments à inclure dans le portefeuille simulé
+                {t("allocation.simulator.instrumentsToInclude")}
               </p>
               <p className="text-xs text-ink-400">
-                Cochez, parmi les instruments existants en base, ceux qui composeront ce
-                portefeuille ({selectedCount}/{instrumentsInCurrency.length} sélectionné
-                {selectedCount > 1 ? "s" : ""}).
+                {t("allocation.simulator.instrumentsToIncludeDescription", {
+                  selected: selectedCount,
+                  total: instrumentsInCurrency.length,
+                })}
               </p>
             </div>
             <div className="flex gap-2">
@@ -185,15 +187,15 @@ export function AllocationSimulator() {
                 className="text-xs font-medium text-brand-600 hover:underline"
                 onClick={() => setSelectedIds(new Set(instrumentsInCurrency.map((i) => i.id)))}
               >
-                Tout cocher
+                {t("allocation.simulator.checkAll")}
               </button>
-              <span className="text-ink-200">·</span>
+              <span className="text-ink-200">-</span>
               <button
                 type="button"
                 className="text-xs font-medium text-brand-600 hover:underline"
                 onClick={() => setSelectedIds(new Set())}
               >
-                Tout décocher
+                {t("allocation.simulator.uncheckAll")}
               </button>
             </div>
           </div>
@@ -201,10 +203,10 @@ export function AllocationSimulator() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-10" />
-              <TableHead>Instrument</TableHead>
-              <TableHead>Prix actuel</TableHead>
+              <TableHead>{t("investments.instrument")}</TableHead>
+              <TableHead>{t("instruments.history.currentPriceLabel")}</TableHead>
               <TableHead className="text-right">
-                {strategy === "EQUAL" ? "Poids (égal)" : "Poids (%)"}
+                {t(strategy === "EQUAL" ? "allocation.simulator.weightEqual" : "allocation.simulator.weightPercent")}
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -232,7 +234,7 @@ export function AllocationSimulator() {
                   <TableCell className="text-right">
                     {strategy === "EQUAL" ? (
                       <span className="font-ledger text-ink-600">
-                        {checked ? formatPercentage(equalWeightPercent, { forceSign: false, decimals: 1 }) : "—"}
+                        {checked ? formatPercentage(equalWeightPercent, { forceSign: false, decimals: 1 }) : "-"}
                       </span>
                     ) : (
                       <Input
@@ -261,30 +263,30 @@ export function AllocationSimulator() {
 
       <div className="flex items-center justify-between">
         <p className="text-xs text-ink-400">
-          {strategy === "CUSTOM"
-            ? "Les poids saisis sont normalisés automatiquement (ils n'ont pas besoin de sommer à 100)."
-            : "Le capital est réparti à parts égales entre les instruments cochés, puis le reliquat est utilisé pour acheter des unités supplémentaires et maximiser le capital investi."}
+          {t(strategy === "CUSTOM"
+            ? "allocation.simulator.customWeightsHint"
+            : "allocation.simulator.equalWeightsHint")}
         </p>
         <Button onClick={handleSubmit} disabled={!canSubmit || simulate.isPending}>
           <Calculator className="mr-1.5 h-4 w-4" />
-          {simulate.isPending ? "Simulation…" : "Simuler l'allocation"}
+          {simulate.isPending ? t("allocation.simulator.simulating") : t("allocation.simulator.simulate")}
         </Button>
       </div>
 
       {simulate.isError && (
         <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700 ring-1 ring-inset ring-rose-200">
-          {simulate.error instanceof Error ? simulate.error.message : "La simulation a échoué."}
+          {simulate.error instanceof Error ? simulate.error.message : t("allocation.simulator.simulationFailed")}
         </p>
       )}
 
       {result && (
         <div className="space-y-3 border-t border-ink-100 pt-5">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <SummaryStat label="Capital" value={result.capital.format()} />
-            <SummaryStat label="Investi" value={result.investedAmount.format()} />
-            <SummaryStat label="Cash restant" value={result.cashRemaining.format()} />
+            <SummaryStat label={t("allocation.simulator.capital")} value={result.capital.format()} />
+            <SummaryStat label={t("allocation.simulator.invested")} value={result.investedAmount.format()} />
+            <SummaryStat label={t("allocation.simulator.cashRemaining")} value={result.cashRemaining.format()} />
             <SummaryStat
-              label="Taux d'investissement"
+              label={t("allocation.simulator.investmentRate")}
               value={formatPercentage(result.investedPercent, { forceSign: false, decimals: 1 })}
             />
           </div>
@@ -292,12 +294,12 @@ export function AllocationSimulator() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Instrument</TableHead>
-                <TableHead className="text-right">Prix</TableHead>
-                <TableHead className="text-right">Poids ciblé</TableHead>
-                <TableHead className="text-right">Quantité à acheter</TableHead>
-                <TableHead className="text-right">Montant investi</TableHead>
-                <TableHead className="text-right">Poids réel</TableHead>
+                <TableHead>{t("investments.instrument")}</TableHead>
+                <TableHead className="text-right">{t("orders.price")}</TableHead>
+                <TableHead className="text-right">{t("allocation.simulator.targetWeight")}</TableHead>
+                <TableHead className="text-right">{t("allocation.simulator.quantityToBuy")}</TableHead>
+                <TableHead className="text-right">{t("allocation.simulator.investedAmount")}</TableHead>
+                <TableHead className="text-right">{t("allocation.simulator.actualWeight")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

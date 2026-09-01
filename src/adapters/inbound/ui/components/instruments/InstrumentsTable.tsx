@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { FinancialInstrument } from "../../../../../domain/entities/FinancialInstrument";
 import { EmptyState } from "../common/EmptyState";
 import { LineChart, Pencil, Check, X, ChevronRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useUpdateNominalValue } from "../../hooks/useInstruments";
 import { getErrorMessage } from "../../utils/errorMessage";
 import { InstrumentDetailDrawer } from "./InstrumentDetailDrawer";
@@ -10,6 +11,7 @@ import { InstrumentTypeBadge } from "../common/InstrumentTypeBadge";
 /** NominalValueCell - affiche la valeur nominale d'un instrument et permet
  * de la modifier en place (opération sur titres : division, regroupement). */
 function NominalValueCell({ instrument }: { instrument: FinancialInstrument }) {
+  const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState("");
   const updateNominalValue = useUpdateNominalValue();
@@ -39,9 +41,9 @@ function NominalValueCell({ instrument }: { instrument: FinancialInstrument }) {
         type="button"
         onClick={startEditing}
         className="group inline-flex items-center gap-1.5 font-ledger text-ink-700 hover:text-brand-700"
-        title="Modifier la valeur nominale"
+        title={t("instruments.table.editNominalValue")}
       >
-        {instrument.nominalValue ? instrument.nominalValue.format() : "—"}
+        {instrument.nominalValue ? instrument.nominalValue.format() : "-"}
         <Pencil className="h-3.5 w-3.5 opacity-0 transition group-hover:opacity-60" />
       </button>
     );
@@ -67,7 +69,7 @@ function NominalValueCell({ instrument }: { instrument: FinancialInstrument }) {
           onClick={submit}
           disabled={updateNominalValue.isPending}
           className="rounded-md bg-brand-600 p-1 text-white transition hover:bg-brand-700 disabled:opacity-60"
-          title="Valider"
+          title={t("common.submit")}
         >
           <Check className="h-3.5 w-3.5" />
         </button>
@@ -75,7 +77,7 @@ function NominalValueCell({ instrument }: { instrument: FinancialInstrument }) {
           type="button"
           onClick={cancel}
           className="rounded-md bg-ink-100 p-1 text-ink-600 transition hover:bg-ink-200"
-          title="Annuler"
+          title={t("common.cancel")}
         >
           <X className="h-3.5 w-3.5" />
         </button>
@@ -88,6 +90,7 @@ function NominalValueCell({ instrument }: { instrument: FinancialInstrument }) {
 }
 
 export function InstrumentsTable({ instruments }: { instruments: FinancialInstrument[] }) {
+  const { t } = useTranslation();
   const [selected, setSelected] = useState<FinancialInstrument | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -95,8 +98,8 @@ export function InstrumentsTable({ instruments }: { instruments: FinancialInstru
     return (
       <EmptyState
         icon={LineChart}
-        title="Aucun instrument"
-        description="Créez votre premier instrument financier ci-dessus."
+        title={t("instruments.table.emptyTitle")}
+        description={t("instruments.table.emptyDescription")}
       />
     );
   }
@@ -116,12 +119,12 @@ export function InstrumentsTable({ instruments }: { instruments: FinancialInstru
           <table className="w-full text-left text-sm">
             <thead className="sticky top-0 z-10 border-b border-ink-100 bg-ink-50/95 text-xs uppercase tracking-wide text-ink-400 backdrop-blur">
               <tr>
-                <th className="px-4 py-3 font-medium">Symbole</th>
-                <th className="px-4 py-3 font-medium">Nom</th>
-                <th className="px-4 py-3 font-medium">Type</th>
-                <th className="px-4 py-3 font-medium">Devise</th>
-                <th className="px-4 py-3 font-medium">Prix actuel</th>
-                <th className="px-4 py-3 font-medium">Valeur nominale</th>
+                <th className="px-4 py-3 font-medium">{t("instruments.form.symbol")}</th>
+                <th className="px-4 py-3 font-medium">{t("common.name")}</th>
+                <th className="px-4 py-3 font-medium">{t("common.type")}</th>
+                <th className="px-4 py-3 font-medium">{t("common.currency")}</th>
+                <th className="px-4 py-3 font-medium">{t("instruments.history.currentPriceLabel")}</th>
+                <th className="px-4 py-3 font-medium">{t("instruments.form.nominalValue")}</th>
                 <th className="w-8 px-2 py-3" aria-hidden />
               </tr>
             </thead>

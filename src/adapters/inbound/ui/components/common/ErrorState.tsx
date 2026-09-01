@@ -1,4 +1,5 @@
 import { AlertTriangle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface ErrorStateProps {
   message: string;
@@ -11,6 +12,7 @@ interface ErrorStateProps {
  * (ApplicationError) : jamais de détail technique brut ici.
  */
 export function ErrorState({ message, onRetry }: ErrorStateProps) {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-rose-200 bg-rose-50 px-6 py-12 text-center">
       <AlertTriangle className="h-6 w-6 text-rose-500" />
@@ -20,7 +22,7 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
           onClick={onRetry}
           className="mt-1 rounded-lg border border-rose-300 bg-white px-3 py-1.5 text-sm font-medium text-rose-700 transition hover:bg-rose-100"
         >
-          Réessayer
+          {t("common.retry")}
         </button>
       )}
     </div>

@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Briefcase } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { PageContainer } from "../components/layout/PageContainer";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { PerformanceChart } from "../components/performance/PerformanceChart";
@@ -24,6 +25,7 @@ const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
  * valorisations agrégées.
  */
 export function PerformancePage() {
+  const { t } = useTranslation();
   const [period, setPeriod] = useState<PerformancePeriod>("1A");
   const { totalValue, totalPnl, performancePercentage, earliestPortfolioDate, hasAnyPortfolio, isLoading } =
     useConsolidatedPortfolio();
@@ -42,20 +44,20 @@ export function PerformancePage() {
 
   return (
     <PageContainer
-      title="Performance"
-      description="L'évolution détaillée de la valeur de votre portefeuille."
+      title={t("nav.performance")}
+      description={t("performance.pageDescription")}
     >
       {!isLoading && !hasAnyPortfolio ? (
         <EmptyState
           icon={Briefcase}
-          title="Aucune performance à afficher"
-          description="Créez un portefeuille pour suivre l'évolution de sa valeur ici."
+          title={t("performance.emptyTitle")}
+          description={t("performance.emptyDescription")}
           action={
             <Link
               to={ROUTES.portfolios}
               className="rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
             >
-              Voir mes portefeuilles
+              {t("orders.viewMyPortfolios")}
             </Link>
           }
         />
@@ -71,7 +73,7 @@ export function PerformancePage() {
 
           <Card>
             <CardHeader className="pb-0">
-              <CardTitle>Performance du portefeuille</CardTitle>
+              <CardTitle>{t("performance.portfolioPerformance")}</CardTitle>
             </CardHeader>
             <CardContent>
               <PerformanceChart

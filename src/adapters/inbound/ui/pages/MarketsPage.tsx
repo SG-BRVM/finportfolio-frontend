@@ -9,6 +9,7 @@ import { EmptyState } from "../components/common/EmptyState";
 import { InstrumentTypeBadge } from "../components/common/InstrumentTypeBadge";
 import { InstrumentVariationCell } from "../components/markets/InstrumentVariationCell";
 import { useInstruments } from "../hooks/useInstruments";
+import { useTranslation } from "react-i18next";
 
 /**
  * MarketsPage - "Marchés". Aucune notion d'indice de marché (le backend
@@ -22,6 +23,7 @@ import { useInstruments } from "../hooks/useInstruments";
  * (voir InstrumentVariationCell / GET /instruments/{id}/history).
  */
 export function MarketsPage() {
+  const { t } = useTranslation();
   const { data: instruments = [], isLoading } = useInstruments();
   const [search, setSearch] = useState("");
 
@@ -34,10 +36,10 @@ export function MarketsPage() {
   }, [instruments, search]);
 
   return (
-    <PageContainer title="Marchés" description="Les instruments suivis par votre plateforme.">
+    <PageContainer title={t("nav.markets")} description={t("markets.pageDescription")}>
       <Card>
         <CardHeader className="pb-0">
-          <CardTitle>Marchés suivis</CardTitle>
+          <CardTitle>{t("markets.trackedMarkets")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="mb-4 relative max-w-xs">
@@ -45,7 +47,7 @@ export function MarketsPage() {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Rechercher un instrument…"
+              placeholder={t("markets.searchPlaceholder")}
               className="pl-9"
             />
           </div>
@@ -59,17 +61,17 @@ export function MarketsPage() {
           ) : filtered.length === 0 ? (
             <EmptyState
               icon={Landmark}
-              title="Aucun instrument"
-              description="Aucun instrument ne correspond à votre recherche."
+              title={t("instruments.table.emptyTitle")}
+              description={t("markets.noResultsDescription")}
             />
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Instrument</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead className="text-right">Dernier cours</TableHead>
-                  <TableHead className="text-right">Variation</TableHead>
+                  <TableHead>{t("investments.instrument")}</TableHead>
+                  <TableHead>{t("common.type")}</TableHead>
+                  <TableHead className="text-right">{t("markets.lastPrice")}</TableHead>
+                  <TableHead className="text-right">{t("markets.variation")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

@@ -1,23 +1,27 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { useCreatePortfolio } from "../../hooks/usePortfolios";
 import { useInvestorSearch } from "../../hooks/useInvestors";
 import { EntityAutocomplete } from "../common/EntityAutocomplete";
 import { getErrorMessage } from "../../utils/errorMessage";
 
-const schema = z.object({
-  investorId: z.string().min(1, "L'investisseur est requis."),
-  name: z.string().min(1, "Le nom est requis."),
-  currency: z
-    .string()
-    .min(3, "3 lettres requises.")
-    .max(3, "3 lettres requises.")
-    .transform((v) => v.toUpperCase()),
-});
+function buildSchema(t: TFunction) {
+  return z.object({
+    investorId: z.string().min(1, t("portfolios.form.investorRequired")),
+    name: z.string().min(1, t("portfolios.form.nameRequired")),
+    currency: z
+      .string()
+      .min(3, t("portfolios.form.threeLettersRequired"))
+      .max(3, t("portfolios.form.threeLettersRequired"))
+      .transform((v) => v.toUpperCase()),
+  });
+}
 
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.infer<ReturnType<typeof buildSchema>>;
 
 interface PortfolioFormProps {
   defaultInvestorId?: string;
@@ -26,6 +30,8 @@ interface PortfolioFormProps {
 
 /** PortfolioForm - création d'un portefeuille rattaché à un investisseur. */
 export function PortfolioForm({ defaultInvestorId, onCreated }: PortfolioFormProps) {
+  const { t, i18n } = useTranslation();
+  const schema = useMemo(() => buildSchema(t), [i18n.language]); // eslint-disable-line react-hooks/exhaustive-deps
   const {
     register,
     handleSubmit,
@@ -56,8 +62,8 @@ export function PortfolioForm({ defaultInvestorId, onCreated }: PortfolioFormPro
           control={control}
           render={({ field }) => (
             <EntityAutocomplete
-              label="ID Investisseur"
-              placeholder="Tapez le nom de l'investisseur…"
+              label={t("portfolios.form.investorIdLabel")}
+              placeholder={t("portfolios.form.investorPlaceholder")}
               value={field.value}
               onChange={(id) => {
                 field.onChange(id);
@@ -72,7 +78,7 @@ export function PortfolioForm({ defaultInvestorId, onCreated }: PortfolioFormPro
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium text-ink-700">Nom du portefeuille</label>
+        <label className="mb-1 block text-sm font-medium text-ink-700">{t("portfolios.form.portfolioNameLabel")}</label>
         <input
           {...register("name")}
           type="text"
@@ -82,7 +88,7 @@ export function PortfolioForm({ defaultInvestorId, onCreated }: PortfolioFormPro
         {errors.name && <p className="mt-1 text-xs text-rose-600">{errors.name.message}</p>}
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium text-ink-700">Devise</label>
+        <label className="mb-1 block text-sm font-medium text-ink-700">{t("common.currency")}</label>
         <input
           {...register("currency")}
           type="text"
@@ -102,7 +108,7 @@ export function PortfolioForm({ defaultInvestorId, onCreated }: PortfolioFormPro
         disabled={createPortfolio.isPending}
         className="w-full rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-700 disabled:opacity-60"
       >
-        {createPortfolio.isPending ? "Création…" : "Créer le portefeuille"}
+        {createPortfolio.isPending ? t("portfolios.form.creating") : t("portfolios.create")}
       </button>
     </form>
   );

@@ -1,4 +1,5 @@
 import { Target } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { PageContainer } from "../components/layout/PageContainer";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Progress } from "../components/ui/progress";
@@ -13,12 +14,13 @@ import { formatNumber } from "../../../../shared/utils/formatNumber";
  * (voir hooks/useGoals.ts, GET/POST /api/v1/goals).
  */
 export function GoalsPage() {
+  const { t } = useTranslation();
   const { data: goals = [], isLoading } = useGoals();
 
   return (
     <PageContainer
-      title="Mes objectifs"
-      description="Suivez la progression de vos projets financiers."
+      title={t("nav.goals")}
+      description={t("goals.pageDescription")}
       actions={<AddGoalDialog />}
     >
       {isLoading ? (
@@ -30,8 +32,8 @@ export function GoalsPage() {
       ) : goals.length === 0 ? (
         <EmptyState
           icon={Target}
-          title="Aucun objectif pour le moment"
-          description="Ajoutez un premier objectif pour commencer à suivre votre progression."
+          title={t("goals.emptyTitle")}
+          description={t("goals.emptyDescription")}
         />
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">

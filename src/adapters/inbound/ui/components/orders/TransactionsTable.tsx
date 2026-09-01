@@ -1,4 +1,5 @@
 import { Receipt } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { EnrichedTransaction } from "../../hooks/useOrdersOverview";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Skeleton } from "../ui/skeleton";
@@ -18,6 +19,7 @@ interface TransactionsTableProps {
  * useConsolidatedTransactions).
  */
 export function TransactionsTable({ transactions, isLoading }: TransactionsTableProps) {
+  const { t } = useTranslation();
   if (isLoading) {
     return (
       <div className="overflow-hidden rounded-xl border border-ink-100 bg-white">
@@ -38,8 +40,8 @@ export function TransactionsTable({ transactions, isLoading }: TransactionsTable
     return (
       <EmptyState
         icon={Receipt}
-        title="Aucune transaction récente"
-        description="Les transactions exécutées apparaîtront ici."
+        title={t("orders.noRecentTransactions")}
+        description={t("orders.transactionsWillAppear")}
       />
     );
   }
@@ -48,13 +50,13 @@ export function TransactionsTable({ transactions, isLoading }: TransactionsTable
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Instrument</TableHead>
-          <TableHead>Sens</TableHead>
-          <TableHead>Portefeuille</TableHead>
-          <TableHead className="text-right">Quantité</TableHead>
-          <TableHead className="text-right">Prix</TableHead>
-          <TableHead className="text-right">Montant</TableHead>
-          <TableHead>Exécuté le</TableHead>
+          <TableHead>{t("investments.instrument")}</TableHead>
+          <TableHead>{t("orders.form.side")}</TableHead>
+          <TableHead>{t("common.portfolio")}</TableHead>
+          <TableHead className="text-right">{t("investments.quantity")}</TableHead>
+          <TableHead className="text-right">{t("orders.price")}</TableHead>
+          <TableHead className="text-right">{t("common.amount")}</TableHead>
+          <TableHead>{t("orders.executedOn")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

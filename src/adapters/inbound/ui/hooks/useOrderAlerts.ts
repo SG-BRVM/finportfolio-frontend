@@ -1,4 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { container } from "../../../../infrastructure/di/container";
 import type { Order } from "../../../../domain/entities/Order";
 import type { OrderStatus } from "../../../../domain/enums/OrderStatus";
@@ -13,11 +14,14 @@ export interface OrderAlert {
 
 /** Libellé d'alerte associé au statut réel de l'ordre - partagé entre
  * AlertsPage et l'aperçu du Topbar pour rester cohérent. */
-export const ORDER_ALERT_TITLE: Record<OrderStatus, string> = {
-  EXECUTED: "Ordre exécuté",
-  PENDING: "Ordre en attente",
-  CANCELLED: "Ordre annulé",
-};
+export function useOrderAlertTitle(): Record<OrderStatus, string> {
+  const { t } = useTranslation();
+  return {
+    EXECUTED: t("alerts.orderExecuted"),
+    PENDING: t("alerts.orderPending"),
+    CANCELLED: t("alerts.orderCancelled"),
+  };
+}
 
 /**
  * useOrderAlerts - alertes réelles dérivées des ordres passés sur tous
@@ -28,11 +32,12 @@ export const ORDER_ALERT_TITLE: Record<OrderStatus, string> = {
  * parallèle, puis on fusionne et trie par date de création décroissante.
  *
  * Remplace mocks/notifications.ts, qui couvrait aussi les catégories
- * performance/risque/marchés/sécurité — sans contrepartie backend
+ * performance/risque/marchés/sécurité - sans contrepartie backend
  * (aucune notion de ce type dans le Domain), ces catégories ont été
  * retirées plutôt que mockées.
  */
 export function useOrderAlerts() {
+  const { t } = useTranslation();
   const { portfolios, isLoading: arePortfoliosLoading } = usePortfolios();
   const { data: instruments = [], isLoading: areInstrumentsLoading } = useInstruments();
 
@@ -53,8 +58,8 @@ export function useOrderAlerts() {
     .flatMap((query) => query.data ?? [])
     .map((order) => ({
       order,
-      portfolioName: portfoliosById.get(order.portfolioId)?.name ?? "Portefeuille",
-      instrumentSymbol: instrumentsById.get(order.instrumentId)?.symbol ?? "—",
+      portfolioName: portfoliosById.get(order.portfolioId)?.name ?? t("common.portfolio"),
+      instrumentSymbol: instrumentsById.get(order.instrumentId)?.symbol ?? "-",
     }))
     .sort((a, b) => b.order.createdAt.getTime() - a.order.createdAt.getTime());
 

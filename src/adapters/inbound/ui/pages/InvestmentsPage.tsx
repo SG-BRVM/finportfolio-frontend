@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Briefcase } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { PageContainer } from "../components/layout/PageContainer";
 import { InvestmentTable } from "../components/investments/InvestmentTable";
 import { EmptyState } from "../components/common/EmptyState";
@@ -12,24 +13,25 @@ import { ROUTES } from "../../../../shared/constants/routes";
  * que le détail d'un seul portefeuille à la fois comme sur le Dashboard.
  */
 export function InvestmentsPage() {
+  const { t } = useTranslation();
   const { positions, hasAnyPortfolio, isLoading } = useConsolidatedPortfolio();
 
   return (
     <PageContainer
-      title="Mes investissements"
-      description="La vue consolidée de vos positions, tous portefeuilles confondus."
+      title={t("nav.investments")}
+      description={t("investments.pageDescription")}
     >
       {!isLoading && !hasAnyPortfolio ? (
         <EmptyState
           icon={Briefcase}
-          title="Aucun investissement"
-          description="Créez un portefeuille et passez un ordre pour voir vos investissements apparaître ici."
+          title={t("investments.emptyTitle")}
+          description={t("investments.emptyPortfolioDescription")}
           action={
             <Link
               to={ROUTES.portfolios}
               className="rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
             >
-              Voir mes portefeuilles
+              {t("orders.viewMyPortfolios")}
             </Link>
           }
         />

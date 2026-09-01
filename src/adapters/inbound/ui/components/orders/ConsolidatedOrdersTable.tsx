@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ArrowLeftRight, Search } from "lucide-react";
 import type { EnrichedOrder } from "../../hooks/useOrdersOverview";
 import type { OrderStatus } from "../../../../../domain/enums/OrderStatus";
@@ -7,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Input } from "../ui/input";
 import { Skeleton } from "../ui/skeleton";
 import { EmptyState } from "../common/EmptyState";
-import { OrderSideBadge, OrderStatusBadge } from "../common/StatusBadge";
+import { OrderSideBadge, OrderStatusBadge, useOrderStatusLabels } from "../common/StatusBadge";
 import { OrderActions } from "./OrderActions";
 import {
   Select,
@@ -18,12 +19,6 @@ import {
 } from "../ui/select";
 import { formatQuantity } from "../../../../../shared/utils/formatNumber";
 import { formatDateShort } from "../../../../../shared/utils/formatDate";
-
-const STATUS_LABELS: Record<OrderStatus, string> = {
-  PENDING: "En attente",
-  EXECUTED: "Exécuté",
-  CANCELLED: "Annulé",
-};
 
 const PAGE_SIZE = 8;
 
@@ -39,6 +34,8 @@ interface ConsolidatedOrdersTableProps {
  * InvestmentTable.
  */
 export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrdersTableProps) {
+  const { t } = useTranslation();
+  const statusLabels = useOrderStatusLabels();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
   const [page, setPage] = useState(0);
@@ -87,8 +84,8 @@ export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrder
     return (
       <EmptyState
         icon={ArrowLeftRight}
-        title="Aucun ordre récent"
-        description="Vos ordres apparaîtront ici une fois créés."
+        title={t("orders.emptyTitle")}
+        description={t("orders.emptyDescription")}
       />
     );
   }
@@ -104,7 +101,7 @@ export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrder
               setSearch(e.target.value);
               setPage(0);
             }}
-            placeholder="Rechercher un instrument, un portefeuille…"
+            placeholder={t("investments.searchPlaceholder")}
             className="pl-9"
           />
         </div>
@@ -116,38 +113,38 @@ export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrder
           }}
         >
           <SelectTrigger className="w-44">
-            <SelectValue placeholder="Statut" />
+            <SelectValue placeholder={t("common.status")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tous les statuts</SelectItem>
+            <SelectItem value="all">{t("orders.allStatuses")}</SelectItem>
             {ORDER_STATUSES.map((status) => (
               <SelectItem key={status} value={status}>
-                {STATUS_LABELS[status]}
+                {statusLabels[status]}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
         <span className="ml-auto text-xs text-ink-400">
-          {filtered.length} ordre{filtered.length > 1 ? "s" : ""}
+          {t("orders.ordersCount", { count: filtered.length })}
         </span>
       </div>
 
       {filtered.length === 0 ? (
-        <EmptyState title="Aucun résultat" description="Aucun ordre ne correspond à votre recherche." />
+        <EmptyState title={t("common.noResults")} description={t("orders.noResultsDescription")} />
       ) : (
         <>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Instrument</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Portefeuille</TableHead>
-                <TableHead className="text-right">Quantité</TableHead>
-                <TableHead className="text-right">Prix</TableHead>
-                <TableHead className="text-right">Montant</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Statut</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>{t("investments.instrument")}</TableHead>
+                <TableHead>{t("common.type")}</TableHead>
+                <TableHead>{t("common.portfolio")}</TableHead>
+                <TableHead className="text-right">{t("investments.quantity")}</TableHead>
+                <TableHead className="text-right">{t("orders.price")}</TableHead>
+                <TableHead className="text-right">{t("common.amount")}</TableHead>
+                <TableHead>{t("common.date")}</TableHead>
+                <TableHead>{t("common.status")}</TableHead>
+                <TableHead className="text-right">{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -176,7 +173,7 @@ export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrder
                     {order.status === "PENDING" ? (
                       <OrderActions order={order} />
                     ) : (
-                      <span className="text-xs text-ink-300">—</span>
+                      <span className="text-xs text-ink-300">-</span>
                     )}
                   </TableCell>
                 </TableRow>
@@ -187,7 +184,7 @@ export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrder
           {pageCount > 1 && (
             <div className="flex items-center justify-between px-1 text-sm text-ink-500">
               <span>
-                Page {currentPage + 1} sur {pageCount}
+                {t("common.pageOf", { current: currentPage + 1, total: pageCount })}
               </span>
               <div className="flex gap-2">
                 <button
@@ -196,7 +193,7 @@ export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrder
                   onClick={() => setPage((p) => Math.max(0, p - 1))}
                   className="rounded-lg border border-ink-200 px-3 py-1.5 font-medium text-ink-600 transition hover:bg-ink-50 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  Précédent
+                  {t("common.previous")}
                 </button>
                 <button
                   type="button"
@@ -204,7 +201,7 @@ export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrder
                   onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
                   className="rounded-lg border border-ink-200 px-3 py-1.5 font-medium text-ink-600 transition hover:bg-ink-50 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  Suivant
+                  {t("common.next")}
                 </button>
               </div>
             </div>

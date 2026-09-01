@@ -7,6 +7,7 @@ import { EmptyState } from "../components/common/EmptyState";
 import { useInvestors } from "../hooks/useInvestors";
 import { ROUTES } from "../../../../shared/constants/routes";
 import { Users } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 /**
  * InvestorsPage - "Investisseurs" (clients de la plateforme).
@@ -16,13 +17,14 @@ import { Users } from "lucide-react";
  * l'investisseur a été créé.
  */
 export function InvestorsPage() {
+  const { t } = useTranslation();
   const { data: investors = [], isLoading } = useInvestors();
   const navigate = useNavigate();
 
   return (
     <PageContainer
-      title="Investisseurs"
-      description="Consultez vos investisseurs et créez-en de nouveaux."
+      title={t("nav.investors")}
+      description={t("investors.pageDescription")}
     >
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-1">
@@ -34,8 +36,8 @@ export function InvestorsPage() {
           ) : investors.length === 0 ? (
             <EmptyState
               icon={Users}
-              title="Aucun investisseur pour le moment"
-              description="Créez votre premier investisseur avec le formulaire à gauche."
+              title={t("investors.emptyTitle")}
+              description={t("investors.emptyDescription")}
             />
           ) : (
             investors.map((investor) => <InvestorCard key={investor.id} investor={investor} />)

@@ -3,6 +3,8 @@ import type { PerformancePoint, PerformancePeriod } from "../../../../../domain/
 import { PERFORMANCE_PERIODS } from "../../../../../domain/entities/PerformanceHistory";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import { Skeleton } from "../ui/skeleton";
+import { useTranslation } from "react-i18next";
+import { getIntlLocale } from "../../../../../infrastructure/i18n/i18n";
 
 interface PerformanceChartProps {
   points: PerformancePoint[];
@@ -13,7 +15,7 @@ interface PerformanceChartProps {
 }
 
 function formatCompactAmount(value: number, currency: string): string {
-  return new Intl.NumberFormat("fr-FR", {
+  return new Intl.NumberFormat(getIntlLocale(), {
     notation: "compact",
     maximumFractionDigits: 1,
     style: "currency",
@@ -25,7 +27,7 @@ function formatCompactAmount(value: number, currency: string): string {
 }
 
 function formatFullAmount(value: number, currency: string): string {
-  return new Intl.NumberFormat("fr-FR", {
+  return new Intl.NumberFormat(getIntlLocale(), {
     maximumFractionDigits: 0,
     style: "currency",
     currency,
@@ -36,7 +38,7 @@ function formatFullAmount(value: number, currency: string): string {
 }
 
 function formatAxisDate(date: Date): string {
-  return new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "short" }).format(date);
+  return new Intl.DateTimeFormat(getIntlLocale(), { day: "2-digit", month: "short" }).format(date);
 }
 
 /**
@@ -53,6 +55,15 @@ export function PerformanceChart({
   onPeriodChange,
   isLoading,
 }: PerformanceChartProps) {
+  const { t } = useTranslation();
+  const periodLabels: Record<PerformancePeriod, string> = {
+    "1M": t("performance.period.1M"),
+    "3M": t("performance.period.3M"),
+    "6M": t("performance.period.6M"),
+    "1A": t("performance.period.1Y"),
+    "3A": t("performance.period.3Y"),
+    MAX: t("performance.period.origin"),
+  };
   return (
     <div>
       <div className="mb-4 flex justify-end">
@@ -64,7 +75,7 @@ export function PerformanceChart({
         >
           {PERFORMANCE_PERIODS.map((p) => (
             <ToggleGroupItem key={p.value} value={p.value} className="px-3 py-1 text-xs">
-              {p.label}
+              {periodLabels[p.value]}
             </ToggleGroupItem>
           ))}
         </ToggleGroup>
@@ -99,9 +110,9 @@ export function PerformanceChart({
                 domain={["auto", "auto"]}
               />
               <Tooltip
-                formatter={(value: number) => [formatFullAmount(value, currency), "Valeur"]}
+                formatter={(value: number) => [formatFullAmount(value, currency), t("performance.value")]}
                 labelFormatter={(label: Date) =>
-                  new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "long", year: "numeric" }).format(label)
+                  new Intl.DateTimeFormat(getIntlLocale(), { day: "2-digit", month: "long", year: "numeric" }).format(label)
                 }
                 contentStyle={{
                   borderRadius: 12,

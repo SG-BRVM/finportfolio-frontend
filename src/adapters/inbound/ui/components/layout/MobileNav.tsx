@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { SidebarNavigation } from "./SidebarNavigation";
 import { SheetHeader, SheetTitle } from "../ui/sheet";
 import { ROUTES } from "../../../../../shared/constants/routes";
@@ -9,6 +10,7 @@ interface MobileNavProps {
 
 /** MobileNav - contenu du Sheet de navigation (< md). Ferme le Sheet à la sélection d'un item. */
 export function MobileNav({ onNavigate }: MobileNavProps) {
+  const { t } = useTranslation();
   return (
     <div className="flex h-full flex-col">
       <SheetHeader className="space-y-0">
@@ -26,7 +28,7 @@ export function MobileNav({ onNavigate }: MobileNavProps) {
       />
 
       <div className="shrink-0 border-t border-ink-100 px-5 py-4 text-xs text-ink-400">
-        Environnement bac à sable · Données de démonstration
+        {t("layout.sandboxEnvironment")} - {t("layout.demoData")}
       </div>
     </div>
   );

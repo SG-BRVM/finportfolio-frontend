@@ -5,9 +5,3 @@
 export type DocumentCategory = "STATEMENT" | "TAX" | "REGULATORY";
 
 export const DOCUMENT_CATEGORIES: DocumentCategory[] = ["STATEMENT", "TAX", "REGULATORY"];
-
-export const DOCUMENT_CATEGORY_LABELS: Record<DocumentCategory, string> = {
-  STATEMENT: "Relevé",
-  TAX: "Fiscal",
-  REGULATORY: "Réglementaire",
-};

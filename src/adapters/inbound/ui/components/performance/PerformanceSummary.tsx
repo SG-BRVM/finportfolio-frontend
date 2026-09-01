@@ -1,4 +1,5 @@
 import { CalendarClock, ChartNoAxesCombined, Wallet2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { Money } from "../../../../../domain/value-objects/Money";
 import { PERFORMANCE_DIRECTION_CLASSES, formatPerformance } from "../../../../../shared/utils/formatPerformance";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -50,6 +51,7 @@ export function PerformanceSummary({
   annualizedPercentage,
   isLoading,
 }: PerformanceSummaryProps) {
+  const { t } = useTranslation();
   const direction = performancePercentage === null || performancePercentage === 0
     ? "flat"
     : (totalPnl?.isNegative() ?? false)
@@ -58,23 +60,23 @@ export function PerformanceSummary({
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <SummaryCard label="Valeur actuelle" icon={Wallet2} isLoading={isLoading}>
-        <p className="font-ledger text-xl font-semibold text-ink-900">{totalValue?.format() ?? "—"}</p>
+      <SummaryCard label={t("performance.currentValue")} icon={Wallet2} isLoading={isLoading}>
+        <p className="font-ledger text-xl font-semibold text-ink-900">{totalValue?.format() ?? "-"}</p>
       </SummaryCard>
 
-      <SummaryCard label="Performance" icon={ChartNoAxesCombined} isLoading={isLoading}>
+      <SummaryCard label={t("nav.performance")} icon={ChartNoAxesCombined} isLoading={isLoading}>
         <PerformanceBadge value={performancePercentage} />
       </SummaryCard>
 
-      <SummaryCard label="Gain / perte" icon={Wallet2} isLoading={isLoading}>
+      <SummaryCard label={t("performance.gainLoss")} icon={Wallet2} isLoading={isLoading}>
         <p className={`font-ledger text-xl font-semibold ${PERFORMANCE_DIRECTION_CLASSES[direction]}`}>
-          {totalPnl?.format() ?? "—"}
+          {totalPnl?.format() ?? "-"}
         </p>
       </SummaryCard>
 
-      <SummaryCard label="Performance annualisée" icon={CalendarClock} isLoading={isLoading}>
+      <SummaryCard label={t("performance.annualizedPerformance")} icon={CalendarClock} isLoading={isLoading}>
         {annualizedPercentage === null ? (
-          <p className="text-sm text-ink-400">Non calculable</p>
+          <p className="text-sm text-ink-400">{t("performance.notComputable")}</p>
         ) : (
           <p className={`font-ledger text-xl font-semibold ${PERFORMANCE_DIRECTION_CLASSES[formatPerformance(annualizedPercentage).direction]}`}>
             {formatPerformance(annualizedPercentage).label}

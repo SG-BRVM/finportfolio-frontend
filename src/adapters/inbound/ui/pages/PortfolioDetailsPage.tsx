@@ -12,8 +12,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 import { usePortfolio, usePortfolioPositions, usePortfolioOrders } from "../hooks/usePortfolios";
 import { useInstruments } from "../hooks/useInstruments";
 import { getErrorMessage } from "../utils/errorMessage";
+import { useTranslation } from "react-i18next";
 
 export function PortfolioDetailsPage() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const { data: portfolio, isLoading, isError, error, refetch } = usePortfolio(id);
   const { data: positions = [] } = usePortfolioPositions(id);
@@ -23,7 +25,7 @@ export function PortfolioDetailsPage() {
   const instrumentsById = new Map(instruments.map((i) => [i.id, i]));
 
   return (
-    <PageContainer title="Détail portefeuille" description={id}>
+    <PageContainer title={t("portfolios.detailTitle")} description={id}>
       {isLoading && <LoadingState />}
       {isError && <ErrorState message={getErrorMessage(error)} onRetry={() => refetch()} />}
 
@@ -38,9 +40,9 @@ export function PortfolioDetailsPage() {
 
           <Tabs defaultValue="positions">
             <TabsList>
-              <TabsTrigger value="positions">Positions ({positions.length})</TabsTrigger>
-              <TabsTrigger value="orders">Ordres ({orders.length})</TabsTrigger>
-              <TabsTrigger value="new-order">Nouvel ordre</TabsTrigger>
+              <TabsTrigger value="positions">{t("investments.positionsLabel")} ({positions.length})</TabsTrigger>
+              <TabsTrigger value="orders">{t("nav.orders")} ({orders.length})</TabsTrigger>
+              <TabsTrigger value="new-order">{t("orders.newOrder")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="positions">

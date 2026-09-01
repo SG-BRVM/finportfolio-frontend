@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance } from "axios";
 import { environment } from "../../../../infrastructure/config/environment";
+import i18n from "../../../../infrastructure/i18n/i18n";
 
 /**
  * axiosInstance - instance Axios centralisée. C'est le SEUL endroit de
@@ -16,7 +17,12 @@ export function createAxiosInstance(): AxiosInstance {
     },
   });
 
-  instance.interceptors.request.use((config) => config);
+  // Propage la langue active de l'UI au backend, qui l'utilise pour
+  // localiser les messages d'erreur (voir exception_handlers.py côté API).
+  instance.interceptors.request.use((config) => {
+    config.headers["Accept-Language"] = i18n.language ?? "fr";
+    return config;
+  });
 
   instance.interceptors.response.use(
     (response) => response,

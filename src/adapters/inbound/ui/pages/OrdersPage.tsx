@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Briefcase } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { PageContainer } from "../components/layout/PageContainer";
 import { CreateOrderDialog } from "../components/orders/CreateOrderDialog";
 import { ConsolidatedOrdersTable } from "../components/orders/ConsolidatedOrdersTable";
@@ -20,6 +21,7 @@ import { ROUTES } from "../../../../shared/constants/routes";
  * deux entrées de navigation gardent un sens.
  */
 export function OrdersPage() {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { orders, isLoading: areOrdersLoading, hasAnyPortfolio } = useConsolidatedOrders();
@@ -29,8 +31,8 @@ export function OrdersPage() {
 
   return (
     <PageContainer
-      title="Ordres & transactions"
-      description="Passez de nouveaux ordres et suivez leur exécution."
+      title={t("orders.pageTitle")}
+      description={t("orders.pageDescription")}
       actions={<CreateOrderDialog />}
     >
       <Tabs
@@ -40,22 +42,22 @@ export function OrdersPage() {
         }
       >
         <TabsList>
-          <TabsTrigger value="orders">Ordres ({orders.length})</TabsTrigger>
-          <TabsTrigger value="transactions">Transactions ({transactions.length})</TabsTrigger>
+          <TabsTrigger value="orders">{t("nav.orders")} ({orders.length})</TabsTrigger>
+          <TabsTrigger value="transactions">{t("nav.transactions")} ({transactions.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="orders">
           {!areOrdersLoading && !hasAnyPortfolio ? (
             <EmptyState
               icon={Briefcase}
-              title="Aucun portefeuille pour le moment"
-              description="Créez un portefeuille pour pouvoir y passer des ordres."
+              title={t("portfolios.emptyTitle")}
+              description={t("orders.emptyPortfolioDescription")}
               action={
                 <Link
                   to={ROUTES.portfolios}
                   className="rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700"
                 >
-                  Voir mes portefeuilles
+                  {t("orders.viewMyPortfolios")}
                 </Link>
               }
             />

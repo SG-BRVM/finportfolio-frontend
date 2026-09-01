@@ -1,4 +1,5 @@
 import { RefreshCw, CheckCircle2, AlertTriangle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "../ui/button";
 import { formatDate } from "../../../../../shared/utils/formatDate";
 import { useRefreshMarketPrices } from "../../hooks/useMarketData";
@@ -12,6 +13,7 @@ import { getErrorMessage } from "../../utils/errorMessage";
  * bouton, voir RefreshMarketPricesUseCase côté backend.
  */
 export function RefreshPricesButton() {
+  const { t } = useTranslation();
   const refreshPrices = useRefreshMarketPrices();
   const result = refreshPrices.data;
 
@@ -19,10 +21,8 @@ export function RefreshPricesButton() {
     <div className="flex flex-col gap-3 rounded-xl border border-ink-100 bg-white p-4">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold text-ink-900">Cours BRVM</p>
-          <p className="text-xs text-ink-500">
-            Récupère manuellement les derniers cours de clôture publiés par la BRVM.
-          </p>
+          <p className="text-sm font-semibold text-ink-900">{t("markets.brvmPrices")}</p>
+          <p className="text-xs text-ink-500">{t("markets.refreshDescription")}</p>
         </div>
         <Button
           type="button"
@@ -32,7 +32,7 @@ export function RefreshPricesButton() {
           disabled={refreshPrices.isPending}
         >
           <RefreshCw className={`h-3.5 w-3.5 ${refreshPrices.isPending ? "animate-spin" : ""}`} />
-          {refreshPrices.isPending ? "Récupération..." : "Rafraîchir les cours"}
+          {refreshPrices.isPending ? t("markets.fetching") : t("markets.refreshPrices")}
         </Button>
       </div>
 
@@ -48,15 +48,15 @@ export function RefreshPricesButton() {
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
             <span>
-              {result.updatedCount} instrument{result.updatedCount > 1 ? "s" : ""} mis à jour
+              {t("markets.instrumentsUpdated", { count: result.updatedCount })}
               {refreshPrices.submittedAt
-                ? ` · ${formatDate(new Date(refreshPrices.submittedAt))}`
+                ? ` - ${formatDate(new Date(refreshPrices.submittedAt))}`
                 : ""}
             </span>
           </div>
           {result.unmatchedSymbols.length > 0 && (
             <p className="text-amber-700">
-              Symboles cotés non suivis : {result.unmatchedSymbols.join(", ")}
+              {t("markets.unmatchedSymbols")} {result.unmatchedSymbols.join(", ")}
             </p>
           )}
         </div>

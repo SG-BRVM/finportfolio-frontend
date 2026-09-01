@@ -20,7 +20,9 @@ import {
 } from "../ui/select";
 import { useUploadDocument } from "../../hooks/useDocuments";
 import { usePortfolios } from "../../hooks/usePortfolios";
-import { DOCUMENT_CATEGORIES, DOCUMENT_CATEGORY_LABELS } from "../../../../../domain/enums/DocumentCategory";
+import { DOCUMENT_CATEGORIES } from "../../../../../domain/enums/DocumentCategory";
+import { useDocumentCategoryLabels } from "../common/useDocumentCategoryLabels";
+import { useTranslation } from "react-i18next";
 import type { DocumentCategory } from "../../../../../domain/enums/DocumentCategory";
 
 /**
@@ -29,6 +31,8 @@ import type { DocumentCategory } from "../../../../../domain/enums/DocumentCateg
  * un portefeuille choisi dans le formulaire (voir hooks/useDocuments.ts).
  */
 export function UploadDocumentDialog() {
+  const { t } = useTranslation();
+  const categoryLabels = useDocumentCategoryLabels();
   const [open, setOpen] = useState(false);
   const [portfolioId, setPortfolioId] = useState("");
   const [category, setCategory] = useState<DocumentCategory | "">("");
@@ -63,23 +67,21 @@ export function UploadDocumentDialog() {
       <DialogTrigger asChild>
         <Button size="sm" className="gap-1.5">
           <Upload className="h-4 w-4" />
-          Ajouter un document
+          {t("documents.addDocument")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Ajouter un document</DialogTitle>
+          <DialogTitle>{t("documents.addDocument")}</DialogTitle>
         </DialogHeader>
-        <DialogDescription>
-          Envoyez un fichier et rattachez-le à l'un de vos portefeuilles.
-        </DialogDescription>
+        <DialogDescription>{t("documents.addDocumentDescription")}</DialogDescription>
 
         <div className="space-y-4">
           <div>
-            <Label>Portefeuille</Label>
+            <Label>{t("common.portfolio")}</Label>
             <Select value={portfolioId} onValueChange={setPortfolioId}>
               <SelectTrigger>
-                <SelectValue placeholder="Choisir un portefeuille" />
+                <SelectValue placeholder={t("dashboard.choosePortfolio")} />
               </SelectTrigger>
               <SelectContent>
                 {portfolios.map((p) => (
@@ -91,25 +93,25 @@ export function UploadDocumentDialog() {
             </Select>
           </div>
           <div>
-            <Label>Catégorie</Label>
+            <Label>{t("documents.category.label")}</Label>
             <Select
               value={category}
               onValueChange={(v) => setCategory(v as DocumentCategory)}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Choisir une catégorie" />
+                <SelectValue placeholder={t("documents.category.choose")} />
               </SelectTrigger>
               <SelectContent>
                 {DOCUMENT_CATEGORIES.map((c) => (
                   <SelectItem key={c} value={c}>
-                    {DOCUMENT_CATEGORY_LABELS[c]}
+                    {categoryLabels[c]}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
           <div>
-            <Label>Fichier</Label>
+            <Label>{t("documents.file")}</Label>
             <input
               type="file"
               onChange={(e) => setFile(e.target.files?.[0] ?? null)}
@@ -120,10 +122,10 @@ export function UploadDocumentDialog() {
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => setOpen(false)}>
-            Annuler
+            {t("common.cancel")}
           </Button>
           <Button onClick={handleSubmit} disabled={!isValid || uploadDocument.isPending}>
-            {uploadDocument.isPending ? "Envoi…" : "Envoyer"}
+            {uploadDocument.isPending ? t("documents.sending") : t("documents.send")}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { TrendingUp, TrendingDown, Wallet } from "lucide-react";
 import type { Money } from "../../../../../domain/value-objects/Money";
 import { formatPercentage } from "../../../../../shared/utils/formatPercentage";
@@ -39,6 +40,7 @@ export function PerformanceOverviewCard({
   performancePercentage,
   isLoading,
 }: PerformanceOverviewCardProps) {
+  const { t } = useTranslation();
   const isNegative = pnl?.isNegative() ?? false;
   const direction = performancePercentage === null || performancePercentage === 0
     ? "flat"
@@ -48,7 +50,7 @@ export function PerformanceOverviewCard({
 
   return (
     <OverviewCardShell
-      label="Performance"
+      label={t("nav.performance")}
       icon={isNegative ? TrendingDown : TrendingUp}
       iconClassName={`h-4 w-4 ${PERFORMANCE_DIRECTION_CLASSES[direction]}`}
     >
@@ -62,7 +64,7 @@ export function PerformanceOverviewCard({
           </span>
         </div>
       )}
-      <p className="mt-1.5 text-xs text-ink-400">Non réalisée, sur vos positions</p>
+      <p className="mt-1.5 text-xs text-ink-400">{t("dashboard.unrealizedOnPositions")}</p>
     </OverviewCardShell>
   );
 }
@@ -79,8 +81,9 @@ export function LiquidityOverviewCard({
   shareOfTotalPercentage,
   isLoading,
 }: LiquidityOverviewCardProps) {
+  const { t } = useTranslation();
   return (
-    <OverviewCardShell label="Liquidités" icon={Wallet}>
+    <OverviewCardShell label={t("dashboard.liquidity")} icon={Wallet}>
       {isLoading || !cashBalance ? (
         <Skeleton className="h-8 w-28" />
       ) : (
@@ -88,8 +91,10 @@ export function LiquidityOverviewCard({
       )}
       <p className="mt-1.5 text-xs text-ink-400">
         {shareOfTotalPercentage === null
-          ? "Part du portefeuille non calculable"
-          : `${formatPercentage(shareOfTotalPercentage, { forceSign: false, decimals: 1 })} du portefeuille`}
+          ? t("dashboard.shareNotComputable")
+          : t("dashboard.shareOfPortfolio", {
+              percentage: formatPercentage(shareOfTotalPercentage, { forceSign: false, decimals: 1 }),
+            })}
       </p>
     </OverviewCardShell>
   );

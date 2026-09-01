@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ArrowDown, ArrowUp, ArrowUpDown, Search, TrendingUp } from "lucide-react";
 import type { ConsolidatedPosition } from "../../hooks/useConsolidatedPortfolio";
 import type { InstrumentType } from "../../../../../domain/enums/InstrumentType";
@@ -6,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { Input } from "../ui/input";
 import { Skeleton } from "../ui/skeleton";
 import { EmptyState } from "../common/EmptyState";
-import { InstrumentTypeBadge, INSTRUMENT_TYPE_LABELS } from "../common/InstrumentTypeBadge";
+import { InstrumentTypeBadge, useInstrumentTypeLabels } from "../common/InstrumentTypeBadge";
 import { PerformanceBadge } from "../common/PerformanceBadge";
 import {
   Select,
@@ -65,6 +66,8 @@ function SortableHead({
  * shadcn (voir components/ui/table.tsx).
  */
 export function InvestmentTable({ positions, isLoading }: InvestmentTableProps) {
+  const { t } = useTranslation();
+  const instrumentTypeLabels = useInstrumentTypeLabels();
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<InstrumentType | "all">("all");
   const [sortKey, setSortKey] = useState<SortKey>("marketValue");
@@ -151,8 +154,8 @@ export function InvestmentTable({ positions, isLoading }: InvestmentTableProps) 
     return (
       <EmptyState
         icon={TrendingUp}
-        title="Aucun investissement"
-        description="Votre portefeuille ne contient encore aucun investissement."
+        title={t("investments.emptyTitle")}
+        description={t("investments.emptyDescription")}
       />
     );
   }
@@ -168,7 +171,7 @@ export function InvestmentTable({ positions, isLoading }: InvestmentTableProps) 
               setSearch(e.target.value);
               setPage(0);
             }}
-            placeholder="Rechercher un instrument, un portefeuille…"
+            placeholder={t("investments.searchPlaceholder")}
             className="pl-9"
           />
         </div>
@@ -180,37 +183,37 @@ export function InvestmentTable({ positions, isLoading }: InvestmentTableProps) 
           }}
         >
           <SelectTrigger className="w-44">
-            <SelectValue placeholder="Type" />
+            <SelectValue placeholder={t("common.type")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tous les types</SelectItem>
-            {(Object.keys(INSTRUMENT_TYPE_LABELS) as InstrumentType[]).map((type) => (
+            <SelectItem value="all">{t("investments.allTypes")}</SelectItem>
+            {(Object.keys(instrumentTypeLabels) as InstrumentType[]).map((type) => (
               <SelectItem key={type} value={type}>
-                {INSTRUMENT_TYPE_LABELS[type]}
+                {instrumentTypeLabels[type]}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
         <span className="ml-auto text-xs text-ink-400">
-          {sorted.length} position{sorted.length > 1 ? "s" : ""}
+          {t("investments.positionsCount", { count: sorted.length })}
         </span>
       </div>
 
       {sorted.length === 0 ? (
-        <EmptyState title="Aucun résultat" description="Aucun investissement ne correspond à votre recherche." />
+        <EmptyState title={t("common.noResults")} description={t("investments.noResultsDescription")} />
       ) : (
         <>
           <Table>
             <TableHeader>
               <TableRow>
-                <SortableHead label="Instrument" sortKey="name" activeSort={sortKey} direction={sortDirection} onSort={handleSort} />
-                <TableHead>Type</TableHead>
-                <TableHead>Portefeuille</TableHead>
-                <SortableHead label="Quantité" sortKey="quantity" activeSort={sortKey} direction={sortDirection} onSort={handleSort} className="text-right" />
-                <SortableHead label="Prix moyen" sortKey="averagePrice" activeSort={sortKey} direction={sortDirection} onSort={handleSort} className="text-right" />
-                <SortableHead label="Cours actuel" sortKey="currentPrice" activeSort={sortKey} direction={sortDirection} onSort={handleSort} className="text-right" />
-                <SortableHead label="Valeur" sortKey="marketValue" activeSort={sortKey} direction={sortDirection} onSort={handleSort} className="text-right" />
-                <SortableHead label="Performance" sortKey="performance" activeSort={sortKey} direction={sortDirection} onSort={handleSort} className="text-right" />
+                <SortableHead label={t("investments.instrument")} sortKey="name" activeSort={sortKey} direction={sortDirection} onSort={handleSort} />
+                <TableHead>{t("common.type")}</TableHead>
+                <TableHead>{t("common.portfolio")}</TableHead>
+                <SortableHead label={t("investments.quantity")} sortKey="quantity" activeSort={sortKey} direction={sortDirection} onSort={handleSort} className="text-right" />
+                <SortableHead label={t("investments.averagePrice")} sortKey="averagePrice" activeSort={sortKey} direction={sortDirection} onSort={handleSort} className="text-right" />
+                <SortableHead label={t("investments.currentPrice")} sortKey="currentPrice" activeSort={sortKey} direction={sortDirection} onSort={handleSort} className="text-right" />
+                <SortableHead label={t("investments.marketValue")} sortKey="marketValue" activeSort={sortKey} direction={sortDirection} onSort={handleSort} className="text-right" />
+                <SortableHead label={t("investments.performance")} sortKey="performance" activeSort={sortKey} direction={sortDirection} onSort={handleSort} className="text-right" />
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -225,10 +228,10 @@ export function InvestmentTable({ positions, isLoading }: InvestmentTableProps) 
                   <TableCell className="text-right font-ledger">{formatQuantity(p.position.quantity)}</TableCell>
                   <TableCell className="text-right font-ledger">{p.position.averagePrice.toFixed(2)}</TableCell>
                   <TableCell className="text-right font-ledger">
-                    {p.instrument ? p.instrument.currentPrice.format() : "—"}
+                    {p.instrument ? p.instrument.currentPrice.format() : "-"}
                   </TableCell>
                   <TableCell className="text-right font-ledger font-medium">
-                    {p.marketValue ? p.marketValue.format() : "—"}
+                    {p.marketValue ? p.marketValue.format() : "-"}
                   </TableCell>
                   <TableCell className="text-right">
                     <PerformanceBadge value={p.performancePercentage} />
@@ -241,7 +244,7 @@ export function InvestmentTable({ positions, isLoading }: InvestmentTableProps) 
           {pageCount > 1 && (
             <div className="flex items-center justify-between px-1 text-sm text-ink-500">
               <span>
-                Page {currentPage + 1} sur {pageCount}
+                {t("common.pageOf", { current: currentPage + 1, total: pageCount })}
               </span>
               <div className="flex gap-2">
                 <button
@@ -250,7 +253,7 @@ export function InvestmentTable({ positions, isLoading }: InvestmentTableProps) 
                   onClick={() => setPage((p) => Math.max(0, p - 1))}
                   className="rounded-lg border border-ink-200 px-3 py-1.5 font-medium text-ink-600 transition hover:bg-ink-50 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  Précédent
+                  {t("common.previous")}
                 </button>
                 <button
                   type="button"
@@ -258,7 +261,7 @@ export function InvestmentTable({ positions, isLoading }: InvestmentTableProps) 
                   onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
                   className="rounded-lg border border-ink-200 px-3 py-1.5 font-medium text-ink-600 transition hover:bg-ink-50 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  Suivant
+                  {t("common.next")}
                 </button>
               </div>
             </div>

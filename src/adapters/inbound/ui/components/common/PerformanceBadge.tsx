@@ -32,7 +32,7 @@ export function PerformanceBadge({ value, decimals, className }: PerformanceBadg
   if (value === null) {
     return (
       <Badge variant="neutral" className={className}>
-        —
+        -
       </Badge>
     );
   }
