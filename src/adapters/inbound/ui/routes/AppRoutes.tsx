@@ -82,6 +82,16 @@ export function AppRoutes() {
         />
 
         <Route path={ROUTES.health} element={<HealthPage />} />
+
+        <Route
+          path="*"
+          element={
+            <ComingSoonPage
+              title="Page introuvable"
+              description="Cette page n'existe pas ou n'est pas encore disponible."
+            />
+          }
+        />
       </Route>
     </Routes>
   );
