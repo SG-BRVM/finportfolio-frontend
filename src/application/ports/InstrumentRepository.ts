@@ -1,7 +1,9 @@
 import type { FinancialInstrument } from "../../domain/entities/FinancialInstrument";
 import type { InstrumentHistoryEntry } from "../../domain/entities/InstrumentHistoryEntry";
+import type { AllocationSimulationResult } from "../../domain/entities/AllocationSimulation";
 import type { CreateInstrumentDTO } from "../dto/CreateInstrumentDTO";
 import type { UpdateNominalValueDTO } from "../dto/UpdateNominalValueDTO";
+import type { SimulateAllocationDTO } from "../dto/SimulateAllocationDTO";
 
 export interface InstrumentRepository {
   create(data: CreateInstrumentDTO): Promise<FinancialInstrument>;
@@ -13,4 +15,8 @@ export interface InstrumentRepository {
   updateNominalValue(data: UpdateNominalValueDTO): Promise<FinancialInstrument>;
   /** Historique complet des modifications (création, cours, valeur nominale). */
   getHistory(instrumentId: string): Promise<InstrumentHistoryEntry[]>;
+  /** Simule l'achat d'un panier d'instruments selon une stratégie de
+   * pondération pour un capital donné - tout le calcul (quantités,
+   * valorisation, poids réel) est fait côté backend. */
+  simulateAllocation(data: SimulateAllocationDTO): Promise<AllocationSimulationResult>;
 }

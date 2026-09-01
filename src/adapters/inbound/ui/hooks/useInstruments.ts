@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { container } from "../../../../infrastructure/di/container";
 import type { CreateInstrumentDTO } from "../../../../application/dto/CreateInstrumentDTO";
 import type { UpdateNominalValueDTO } from "../../../../application/dto/UpdateNominalValueDTO";
+import type { SimulateAllocationDTO } from "../../../../application/dto/SimulateAllocationDTO";
 import { useDebouncedValue } from "./useDebouncedValue";
 
 const KEYS = {
@@ -69,5 +70,16 @@ export function useUpdateNominalValue() {
       queryClient.invalidateQueries({ queryKey: KEYS.one(variables.instrumentId) });
       queryClient.invalidateQueries({ queryKey: KEYS.history(variables.instrumentId) });
     },
+  });
+}
+
+/** useSimulateAllocation - simule l'achat d'un panier d'instruments selon
+ * une stratégie de pondération pour un capital donné. Simulation pure
+ * (aucun ordre, aucune position touchée) ; tous les calculs (quantités,
+ * valorisation, poids réel) sont faits côté backend. */
+export function useSimulateAllocation() {
+  return useMutation({
+    mutationFn: (data: SimulateAllocationDTO) =>
+      container.useCases.instruments.simulateAllocation.execute(data),
   });
 }

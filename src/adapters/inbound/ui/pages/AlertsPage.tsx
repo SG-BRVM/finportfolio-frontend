@@ -47,7 +47,7 @@ export function AlertsPage() {
                   <span className="ml-auto text-xs text-ink-400">{formatDate(order.createdAt)}</span>
                 </div>
                 <AlertDescription>
-                  {formatQuantity(order.quantity)} {instrumentSymbol} - {portfolioName} -{" "}
+                  {formatQuantity(order.quantity)} {instrumentSymbol} · {portfolioName} ·{" "}
                   {order.price.format()}
                 </AlertDescription>
               </div>

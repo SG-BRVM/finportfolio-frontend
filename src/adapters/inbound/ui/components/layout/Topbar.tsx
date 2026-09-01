@@ -119,7 +119,7 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
                     {ORDER_ALERT_TITLE[order.status]}
                   </span>
                   <span className="text-xs text-ink-400">
-                    {instrumentSymbol} - {portfolioName}
+                    {instrumentSymbol} · {portfolioName}
                   </span>
                 </DropdownMenuItem>
               ))

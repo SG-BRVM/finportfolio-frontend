@@ -1,5 +1,9 @@
 import type { FinancialInstrument } from "../../../../domain/entities/FinancialInstrument";
 import type { InstrumentHistoryEntry } from "../../../../domain/entities/InstrumentHistoryEntry";
+import type {
+  AllocationSimulationLine,
+  AllocationSimulationResult,
+} from "../../../../domain/entities/AllocationSimulation";
 import type { InstrumentType } from "../../../../domain/enums/InstrumentType";
 import type { Sector } from "../../../../domain/enums/Sector";
 import { Money } from "../../../../domain/value-objects/Money";
@@ -26,6 +30,29 @@ export interface InstrumentHistoryEntryApiResponse {
   new_value: string | null;
   changed_at: string;
   source: string;
+}
+
+/** Forme exacte d'une ligne de simulation d'allocation renvoyée par le backend. */
+export interface AllocationSimulationLineApiResponse {
+  instrument_id: string;
+  symbol: string;
+  name: string;
+  instrument_type: InstrumentType;
+  current_price: string;
+  target_weight_percent: string;
+  quantity: number;
+  invested_amount: string;
+  actual_weight_percent: string;
+}
+
+/** Forme exacte de la réponse JSON du backend pour la simulation d'allocation. */
+export interface AllocationSimulationApiResponse {
+  currency: string;
+  capital: string;
+  invested_amount: string;
+  cash_remaining: string;
+  invested_percent: string;
+  lines: AllocationSimulationLineApiResponse[];
 }
 
 export class InstrumentMapper {
@@ -57,6 +84,39 @@ export class InstrumentMapper {
       newValue: response.new_value,
       changedAt: new Date(response.changed_at),
       source: response.source as InstrumentHistoryEntry["source"],
+    };
+  }
+
+  static allocationLineToDomain(
+    response: AllocationSimulationLineApiResponse,
+    currency: string
+  ): AllocationSimulationLine {
+    return {
+      instrumentId: response.instrument_id,
+      symbol: response.symbol,
+      name: response.name,
+      instrumentType: response.instrument_type,
+      currentPrice: Money.of(response.current_price, currency),
+      targetWeightPercent: Number(response.target_weight_percent),
+      quantity: response.quantity,
+      investedAmount: Money.of(response.invested_amount, currency),
+      actualWeightPercent: Number(response.actual_weight_percent),
+    };
+  }
+
+  static allocationResultToDomain(
+    response: AllocationSimulationApiResponse
+  ): AllocationSimulationResult {
+    const { currency } = response;
+    return {
+      currency,
+      capital: Money.of(response.capital, currency),
+      investedAmount: Money.of(response.invested_amount, currency),
+      cashRemaining: Money.of(response.cash_remaining, currency),
+      investedPercent: Number(response.invested_percent),
+      lines: response.lines.map((line) =>
+        InstrumentMapper.allocationLineToDomain(line, currency)
+      ),
     };
   }
 }

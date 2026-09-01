@@ -26,7 +26,7 @@ export function MobileNav({ onNavigate }: MobileNavProps) {
       />
 
       <div className="shrink-0 border-t border-ink-100 px-5 py-4 text-xs text-ink-400">
-        Environnement simulation - Données de référence BRVM
+        Environnement bac à sable · Données de démonstration
       </div>
     </div>
   );

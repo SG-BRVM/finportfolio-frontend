@@ -34,6 +34,7 @@ import { GetInstrumentsUseCase } from "../../application/use-cases/instruments/G
 import { SearchInstrumentsUseCase } from "../../application/use-cases/instruments/SearchInstrumentsUseCase";
 import { UpdateNominalValueUseCase } from "../../application/use-cases/instruments/UpdateNominalValueUseCase";
 import { GetInstrumentHistoryUseCase } from "../../application/use-cases/instruments/GetInstrumentHistoryUseCase";
+import { SimulateAllocationUseCase } from "../../application/use-cases/instruments/SimulateAllocationUseCase";
 import { RefreshMarketPricesUseCase } from "../../application/use-cases/market-data/RefreshMarketPricesUseCase";
 
 import { CreateOrderUseCase } from "../../application/use-cases/orders/CreateOrderUseCase";
@@ -110,6 +111,7 @@ function buildContainer() {
         search: new SearchInstrumentsUseCase(instrumentRepository),
         updateNominalValue: new UpdateNominalValueUseCase(instrumentRepository),
         getHistory: new GetInstrumentHistoryUseCase(instrumentRepository),
+        simulateAllocation: new SimulateAllocationUseCase(instrumentRepository),
       },
       marketData: {
         refreshPrices: new RefreshMarketPricesUseCase(marketDataRepository),

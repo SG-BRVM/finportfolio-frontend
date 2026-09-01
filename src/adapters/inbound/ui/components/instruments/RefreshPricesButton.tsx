@@ -50,7 +50,7 @@ export function RefreshPricesButton() {
             <span>
               {result.updatedCount} instrument{result.updatedCount > 1 ? "s" : ""} mis à jour
               {refreshPrices.submittedAt
-                ? ` - ${formatDate(new Date(refreshPrices.submittedAt))}`
+                ? ` · ${formatDate(new Date(refreshPrices.submittedAt))}`
                 : ""}
             </span>
           </div>

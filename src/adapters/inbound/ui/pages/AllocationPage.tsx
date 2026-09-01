@@ -4,6 +4,7 @@ import { PageContainer } from "../components/layout/PageContainer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
 import { AllocationChart } from "../components/allocation/AllocationChart";
 import { SectorExposure } from "../components/allocation/SectorExposure";
+import { AllocationSimulator } from "../components/allocation/AllocationSimulator";
 import { EmptyState } from "../components/common/EmptyState";
 import { useConsolidatedPortfolio } from "../hooks/useConsolidatedPortfolio";
 import { ROUTES } from "../../../../shared/constants/routes";
@@ -59,6 +60,19 @@ export function AllocationPage() {
           </Card>
         </div>
       )}
+
+      <Card className="mt-6">
+        <CardHeader className="pb-0">
+          <CardTitle>Simulateur d'allocation de capital</CardTitle>
+          <CardDescription>
+            Choisissez un capital et une stratégie de pondération pour voir combien d'unités de
+            chaque instrument acheter, selon les cours actuels.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <AllocationSimulator />
+        </CardContent>
+      </Card>
     </PageContainer>
   );
 }
