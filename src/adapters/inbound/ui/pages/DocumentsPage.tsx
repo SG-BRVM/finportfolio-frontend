@@ -110,7 +110,7 @@ export function DocumentsPage() {
                 {documents.map((doc) => (
                   <TableRow key={doc.id}>
                     <TableCell>
-                      <div className="flex items-center gap-2 font-medium text-ink-900">
+                      <div className="flex items-center gap-2 font-medium text-ink-900 dark:text-ink-50">
                         <FileText className="h-4 w-4 text-ink-300" />
                         {doc.name}
                       </div>

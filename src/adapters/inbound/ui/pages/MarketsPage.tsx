@@ -78,8 +78,8 @@ export function MarketsPage() {
                 {filtered.map((instrument) => (
                   <TableRow key={instrument.id}>
                     <TableCell>
-                      <div className="font-semibold text-ink-900">{instrument.symbol}</div>
-                      <div className="text-xs text-ink-400">{instrument.name}</div>
+                      <div className="font-semibold text-ink-900 dark:text-ink-50">{instrument.symbol}</div>
+                      <div className="text-xs text-ink-400 dark:text-ink-500">{instrument.name}</div>
                     </TableCell>
                     <TableCell>
                       <InstrumentTypeBadge type={instrument.instrumentType} />

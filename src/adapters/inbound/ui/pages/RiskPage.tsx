@@ -137,7 +137,7 @@ function MetricCard({ label, value, hint }: { label: string; value?: string; hin
         {value === undefined ? (
           <Skeleton className="h-7 w-20" />
         ) : (
-          <p className="font-ledger text-xl font-semibold text-ink-900">{value}</p>
+          <p className="font-ledger text-xl font-semibold text-ink-900 dark:text-ink-50">{value}</p>
         )}
         {hint && <p className="mt-1 text-xs text-ink-400">{hint}</p>}
       </CardContent>
