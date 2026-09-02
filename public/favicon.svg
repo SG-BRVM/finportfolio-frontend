@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="fp-bg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3765f0" />
+      <stop offset="1" stop-color="#2547e4" />
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="url(#fp-bg)" />
+  <text
+    x="16"
+    y="22"
+    text-anchor="middle"
+    font-family="Inter, ui-sans-serif, system-ui, sans-serif"
+    font-weight="700"
+    font-size="14"
+    fill="#ffffff"
+  >FP</text>
+</svg>
