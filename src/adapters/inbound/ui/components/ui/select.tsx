@@ -15,16 +15,16 @@ export const SelectTrigger = forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-9 w-full items-center justify-between rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-800",
+      "flex h-9 w-full items-center justify-between rounded-lg border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900 px-3 py-2 text-sm text-ink-800 dark:text-ink-100",
       "focus:border-brand-400 focus:outline-none disabled:opacity-60",
-      "data-[placeholder]:text-ink-400",
+      "data-[placeholder]:text-ink-400 dark:data-[placeholder]:text-ink-500",
       className,
     )}
     {...props}
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <ChevronDown className="h-4 w-4 shrink-0 text-ink-400" />
+      <ChevronDown className="h-4 w-4 shrink-0 text-ink-400 dark:text-ink-500" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
@@ -39,7 +39,7 @@ export const SelectContent = forwardRef<
       ref={ref}
       position={position}
       className={cn(
-        "z-50 max-h-56 min-w-[8rem] overflow-hidden rounded-lg border border-ink-200 bg-white text-sm shadow-lg animate-content-in",
+        "z-50 max-h-56 min-w-[8rem] overflow-hidden rounded-lg border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900 text-sm shadow-lg animate-content-in",
         position === "popper" && "w-[var(--radix-select-trigger-width)]",
         className,
       )}
@@ -58,9 +58,9 @@ export const SelectItem = forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-pointer select-none items-center rounded-md py-1.5 pl-7 pr-2 text-ink-700 outline-none",
-      "data-[highlighted]:bg-brand-50 data-[highlighted]:text-brand-700",
-      "data-[state=checked]:font-semibold data-[state=checked]:text-ink-900",
+      "relative flex w-full cursor-pointer select-none items-center rounded-md py-1.5 pl-7 pr-2 text-ink-700 dark:text-ink-200 outline-none",
+      "data-[highlighted]:bg-brand-50 data-[highlighted]:!text-brand-700 dark:data-[highlighted]:!text-brand-700",
+      "data-[state=checked]:font-semibold data-[state=checked]:text-ink-900 dark:data-[state=checked]:text-ink-50",
       className,
     )}
     {...props}

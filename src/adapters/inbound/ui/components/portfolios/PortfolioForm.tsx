@@ -55,7 +55,7 @@ export function PortfolioForm({ defaultInvestorId, onCreated }: PortfolioFormPro
   });
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-4 rounded-xl border border-ink-100 bg-white p-5">
+    <form onSubmit={onSubmit} noValidate className="space-y-4 rounded-xl border border-ink-100 dark:border-ink-800 bg-white dark:bg-ink-900 p-5">
       <div>
         <Controller
           name="investorId"
@@ -78,23 +78,23 @@ export function PortfolioForm({ defaultInvestorId, onCreated }: PortfolioFormPro
         />
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium text-ink-700">{t("portfolios.form.portfolioNameLabel")}</label>
+        <label className="mb-1 block text-sm font-medium text-ink-700 dark:text-ink-200">{t("portfolios.form.portfolioNameLabel")}</label>
         <input
           {...register("name")}
           type="text"
           placeholder="Retirement Portfolio"
-          className="w-full rounded-lg border border-ink-200 px-3 py-2 text-sm focus:border-brand-400"
+          className="bg-white dark:bg-ink-900 text-ink-800 dark:text-ink-100 w-full rounded-lg border border-ink-200 dark:border-ink-700 px-3 py-2 text-sm focus:border-brand-400"
         />
         {errors.name && <p className="mt-1 text-xs text-rose-600">{errors.name.message}</p>}
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium text-ink-700">{t("common.currency")}</label>
+        <label className="mb-1 block text-sm font-medium text-ink-700 dark:text-ink-200">{t("common.currency")}</label>
         <input
           {...register("currency")}
           type="text"
           maxLength={3}
           placeholder="XOF"
-          className="w-32 rounded-lg border border-ink-200 px-3 py-2 font-ledger text-sm uppercase focus:border-brand-400"
+          className="bg-white dark:bg-ink-900 text-ink-800 dark:text-ink-100 w-32 rounded-lg border border-ink-200 dark:border-ink-700 px-3 py-2 font-ledger text-sm uppercase focus:border-brand-400"
         />
         {errors.currency && (
           <p className="mt-1 text-xs text-rose-600">{errors.currency.message}</p>

@@ -20,8 +20,8 @@ function OverviewCardShell({ label, icon: Icon, iconClassName, children }: Overv
   return (
     <Card>
       <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
-        <CardTitle className="text-xs uppercase tracking-wider text-ink-400">{label}</CardTitle>
-        <Icon className={iconClassName ?? "h-4 w-4 text-ink-300"} />
+        <CardTitle className="text-xs uppercase tracking-wider text-ink-400 dark:text-ink-500">{label}</CardTitle>
+        <Icon className={iconClassName ?? "h-4 w-4 text-ink-300 dark:text-ink-600"} />
       </CardHeader>
       <CardContent className="pt-0">{children}</CardContent>
     </Card>
@@ -64,7 +64,7 @@ export function PerformanceOverviewCard({
           </span>
         </div>
       )}
-      <p className="mt-1.5 text-xs text-ink-400">{t("dashboard.unrealizedOnPositions")}</p>
+      <p className="mt-1.5 text-xs text-ink-400 dark:text-ink-500">{t("dashboard.unrealizedOnPositions")}</p>
     </OverviewCardShell>
   );
 }
@@ -87,9 +87,9 @@ export function LiquidityOverviewCard({
       {isLoading || !cashBalance ? (
         <Skeleton className="h-8 w-28" />
       ) : (
-        <p className="font-ledger text-xl font-semibold text-ink-900">{cashBalance.format()}</p>
+        <p className="font-ledger text-xl font-semibold text-ink-900 dark:text-ink-50">{cashBalance.format()}</p>
       )}
-      <p className="mt-1.5 text-xs text-ink-400">
+      <p className="mt-1.5 text-xs text-ink-400 dark:text-ink-500">
         {shareOfTotalPercentage === null
           ? t("dashboard.shareNotComputable")
           : t("dashboard.shareOfPortfolio", {

@@ -27,7 +27,7 @@ export function MobileNav({ onNavigate }: MobileNavProps) {
         className="flex-1 overflow-y-auto px-3 py-4 scrollbar-thin"
       />
 
-      <div className="shrink-0 border-t border-ink-100 px-5 py-4 text-xs text-ink-400">
+      <div className="shrink-0 border-t border-ink-100 px-5 py-4 text-xs text-ink-400 dark:border-ink-800">
         {t("layout.sandboxEnvironment")} - {t("layout.demoData")}
       </div>
     </div>

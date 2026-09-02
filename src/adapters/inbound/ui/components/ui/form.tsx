@@ -111,7 +111,7 @@ export const FormDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<H
   ({ className, ...props }, ref) => {
     const { formDescriptionId } = useFormField();
     return (
-      <p ref={ref} id={formDescriptionId} className={cn("text-xs text-ink-500", className)} {...props} />
+      <p ref={ref} id={formDescriptionId} className={cn("text-xs text-ink-500 dark:text-ink-400", className)} {...props} />
     );
   },
 );

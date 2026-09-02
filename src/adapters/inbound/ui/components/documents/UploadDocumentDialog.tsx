@@ -115,7 +115,7 @@ export function UploadDocumentDialog() {
             <input
               type="file"
               onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              className="block w-full text-sm text-ink-600 file:mr-3 file:rounded-md file:border-0 file:bg-ink-100 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-ink-700 hover:file:bg-ink-200"
+              className="block w-full text-sm text-ink-600 dark:text-ink-300 file:mr-3 file:rounded-md file:border-0 file:bg-ink-100 dark:bg-ink-800 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-ink-700 dark:text-ink-200 hover:file:bg-ink-200"
             />
           </div>
         </div>

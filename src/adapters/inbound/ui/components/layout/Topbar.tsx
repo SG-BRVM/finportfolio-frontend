@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Bell, Menu, Lock, Settings, UserRound } from "lucide-react";
+import { Menu, Lock, Settings, UserRound, Sun, Moon } from "lucide-react";
 import { useBackendHealth } from "../../hooks/useHealth";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { Button } from "../ui/button";
@@ -23,8 +23,8 @@ import {
 } from "../ui/breadcrumb";
 import { getBreadcrumbTrail } from "./navigation";
 import { ROUTES } from "../../../../../shared/constants/routes";
-import { useOrderAlerts, useOrderAlertTitle } from "../../hooks/useOrderAlerts";
 import { LanguageSwitcher } from "../common/LanguageSwitcher";
+import { useTheme } from "../../../../../infrastructure/theme/ThemeContext";
 
 interface TopbarProps {
   onOpenMobileNav: () => void;
@@ -39,12 +39,10 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
   const location = useLocation();
   const trail = getBreadcrumbTrail(location.pathname);
 
-  const { alerts } = useOrderAlerts();
-  const recentAlerts = alerts.slice(0, 5);
-  const orderAlertTitle = useOrderAlertTitle();
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="flex h-16 shrink-0 items-center gap-3 border-b border-ink-100 bg-white px-4 md:px-6">
+    <header className="flex h-16 shrink-0 items-center gap-3 border-b border-ink-100 bg-white px-4 dark:border-ink-800 dark:bg-ink-900 md:px-6">
       <Button
         variant="ghost"
         size="icon"
@@ -108,42 +106,16 @@ export function Topbar({ onOpenMobileNav }: TopbarProps) {
 
         <LanguageSwitcher />
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative" aria-label={t("layout.notifications")}>
-              <Bell className="h-[18px] w-[18px]" />
-              {recentAlerts.length > 0 && (
-                <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-brand-600" />
-              )}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
-            <DropdownMenuLabel>{t("layout.notifications")}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {recentAlerts.length === 0 ? (
-              <p className="px-2 py-3 text-sm text-ink-400">{t("layout.noNotifications")}</p>
-            ) : (
-              recentAlerts.map(({ order, portfolioName, instrumentSymbol }) => (
-                <DropdownMenuItem key={order.id} className="flex-col items-start gap-0.5">
-                  <span className="text-sm font-medium text-ink-800">
-                    {orderAlertTitle[order.status]}
-                  </span>
-                  <span className="text-xs text-ink-400">
-                    {instrumentSymbol} - {portfolioName}
-                  </span>
-                </DropdownMenuItem>
-              ))
-            )}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link to={ROUTES.alerts} className="justify-center text-sm font-medium text-brand-700">
-                {t("layout.seeAllAlerts")}
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleTheme}
+          aria-label={theme === "dark" ? t("layout.switchToLight") : t("layout.switchToDark")}
+        >
+          {theme === "dark" ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
+        </Button>
 
-        <div className="hidden h-6 w-px bg-ink-100 sm:block" />
+        <div className="hidden h-6 w-px bg-ink-100 dark:bg-ink-800 sm:block" />
 
         <DropdownMenu>
           <DropdownMenuTrigger className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2">

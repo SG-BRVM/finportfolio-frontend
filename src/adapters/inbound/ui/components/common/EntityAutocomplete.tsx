@@ -91,7 +91,7 @@ export function EntityAutocomplete({
             onFocus={() => setIsOpen(true)}
             onBlur={onBlur}
             autoComplete="off"
-            className="w-full rounded-lg border border-ink-200 px-3 py-2 font-ledger text-sm focus:border-brand-400"
+            className="bg-white dark:bg-ink-900 text-ink-800 dark:text-ink-100 w-full rounded-lg border border-ink-200 dark:border-ink-700 px-3 py-2 font-ledger text-sm focus:border-brand-400"
           />
         </PopoverAnchor>
         <PopoverContent
@@ -103,9 +103,9 @@ export function EntityAutocomplete({
           }}
         >
           <ul className="py-1 text-sm">
-            {isLoading && <li className="px-3 py-2 text-ink-400">{t("autocomplete.searching")}</li>}
+            {isLoading && <li className="px-3 py-2 text-ink-400 dark:text-ink-500">{t("autocomplete.searching")}</li>}
             {!isLoading && options.length === 0 && (
-              <li className="px-3 py-2 text-ink-400">
+              <li className="px-3 py-2 text-ink-400 dark:text-ink-500">
                 {emptyHint ?? t("autocomplete.noResultsUseAsIs")}
               </li>
             )}
@@ -115,11 +115,11 @@ export function EntityAutocomplete({
                   <button
                     type="button"
                     onClick={() => handleSelect(option)}
-                    className="block w-full px-3 py-2 text-left hover:bg-brand-50"
+                    className="block w-full px-3 py-2 text-left hover:bg-brand-50 dark:hover:bg-ink-800"
                   >
-                    <span className="block text-ink-800">{option.label}</span>
+                    <span className="block text-ink-800 dark:text-ink-100">{option.label}</span>
                     {option.sublabel && (
-                      <span className="block text-xs text-ink-400">{option.sublabel}</span>
+                      <span className="block text-xs text-ink-400 dark:text-ink-500">{option.sublabel}</span>
                     )}
                   </button>
                 </li>

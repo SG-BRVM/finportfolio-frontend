@@ -64,9 +64,9 @@ export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrder
           <Skeleton className="h-9 w-64" />
           <Skeleton className="h-9 w-40" />
         </div>
-        <div className="overflow-hidden rounded-xl border border-ink-100 bg-white">
+        <div className="overflow-hidden rounded-xl border border-ink-100 dark:border-ink-800 bg-white dark:bg-ink-900">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-4 border-b border-ink-100 px-4 py-3 last:border-0">
+            <div key={i} className="flex items-center gap-4 border-b border-ink-100 dark:border-ink-800 px-4 py-3 last:border-0">
               <Skeleton className="h-4 w-28" />
               <Skeleton className="h-4 w-16" />
               <Skeleton className="h-4 w-20" />
@@ -94,7 +94,7 @@ export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrder
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative w-full max-w-xs">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-300" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-300 dark:text-ink-600" />
           <Input
             value={search}
             onChange={(e) => {
@@ -124,7 +124,7 @@ export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrder
             ))}
           </SelectContent>
         </Select>
-        <span className="ml-auto text-xs text-ink-400">
+        <span className="ml-auto text-xs text-ink-400 dark:text-ink-500">
           {t("orders.ordersCount", { count: filtered.length })}
         </span>
       </div>
@@ -151,19 +151,19 @@ export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrder
               {pageItems.map(({ order, portfolioName, instrument }) => (
                 <TableRow key={order.id}>
                   <TableCell>
-                    <div className="font-semibold text-ink-900">{instrument?.symbol ?? order.instrumentId.slice(0, 8)}</div>
-                    {instrument && <div className="text-xs text-ink-400">{instrument.name}</div>}
+                    <div className="font-semibold text-ink-900 dark:text-ink-50">{instrument?.symbol ?? order.instrumentId.slice(0, 8)}</div>
+                    {instrument && <div className="text-xs text-ink-400 dark:text-ink-500">{instrument.name}</div>}
                   </TableCell>
                   <TableCell>
                     <OrderSideBadge side={order.side} />
                   </TableCell>
-                  <TableCell className="text-ink-500">{portfolioName}</TableCell>
+                  <TableCell className="text-ink-500 dark:text-ink-400">{portfolioName}</TableCell>
                   <TableCell className="text-right font-ledger">{formatQuantity(order.quantity)}</TableCell>
                   <TableCell className="text-right font-ledger">{order.price.format()}</TableCell>
                   <TableCell className="text-right font-ledger font-medium">
                     {order.price.multiply(order.quantity).format()}
                   </TableCell>
-                  <TableCell className="font-ledger text-xs text-ink-500">
+                  <TableCell className="font-ledger text-xs text-ink-500 dark:text-ink-400">
                     {formatDateShort(order.createdAt)}
                   </TableCell>
                   <TableCell>
@@ -173,7 +173,7 @@ export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrder
                     {order.status === "PENDING" ? (
                       <OrderActions order={order} />
                     ) : (
-                      <span className="text-xs text-ink-300">-</span>
+                      <span className="text-xs text-ink-300 dark:text-ink-600">-</span>
                     )}
                   </TableCell>
                 </TableRow>
@@ -182,7 +182,7 @@ export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrder
           </Table>
 
           {pageCount > 1 && (
-            <div className="flex items-center justify-between px-1 text-sm text-ink-500">
+            <div className="flex items-center justify-between px-1 text-sm text-ink-500 dark:text-ink-400">
               <span>
                 {t("common.pageOf", { current: currentPage + 1, total: pageCount })}
               </span>
@@ -191,7 +191,7 @@ export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrder
                   type="button"
                   disabled={currentPage === 0}
                   onClick={() => setPage((p) => Math.max(0, p - 1))}
-                  className="rounded-lg border border-ink-200 px-3 py-1.5 font-medium text-ink-600 transition hover:bg-ink-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="rounded-lg border border-ink-200 dark:border-ink-700 px-3 py-1.5 font-medium text-ink-600 dark:text-ink-300 transition hover:bg-ink-50 dark:hover:bg-ink-800 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {t("common.previous")}
                 </button>
@@ -199,7 +199,7 @@ export function ConsolidatedOrdersTable({ orders, isLoading }: ConsolidatedOrder
                   type="button"
                   disabled={currentPage >= pageCount - 1}
                   onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
-                  className="rounded-lg border border-ink-200 px-3 py-1.5 font-medium text-ink-600 transition hover:bg-ink-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="rounded-lg border border-ink-200 dark:border-ink-700 px-3 py-1.5 font-medium text-ink-600 dark:text-ink-300 transition hover:bg-ink-50 dark:hover:bg-ink-800 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {t("common.next")}
                 </button>

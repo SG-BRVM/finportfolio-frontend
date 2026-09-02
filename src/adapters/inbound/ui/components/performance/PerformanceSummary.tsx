@@ -29,8 +29,8 @@ function SummaryCard({
   return (
     <Card>
       <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
-        <CardTitle className="text-xs uppercase tracking-wider text-ink-400">{label}</CardTitle>
-        <Icon className="h-4 w-4 text-ink-300" />
+        <CardTitle className="text-xs uppercase tracking-wider text-ink-400 dark:text-ink-500">{label}</CardTitle>
+        <Icon className="h-4 w-4 text-ink-300 dark:text-ink-600" />
       </CardHeader>
       <CardContent className="pt-0">{isLoading ? <Skeleton className="h-8 w-28" /> : children}</CardContent>
     </Card>
@@ -61,7 +61,7 @@ export function PerformanceSummary({
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <SummaryCard label={t("performance.currentValue")} icon={Wallet2} isLoading={isLoading}>
-        <p className="font-ledger text-xl font-semibold text-ink-900">{totalValue?.format() ?? "-"}</p>
+        <p className="font-ledger text-xl font-semibold text-ink-900 dark:text-ink-50">{totalValue?.format() ?? "-"}</p>
       </SummaryCard>
 
       <SummaryCard label={t("nav.performance")} icon={ChartNoAxesCombined} isLoading={isLoading}>
@@ -76,7 +76,7 @@ export function PerformanceSummary({
 
       <SummaryCard label={t("performance.annualizedPerformance")} icon={CalendarClock} isLoading={isLoading}>
         {annualizedPercentage === null ? (
-          <p className="text-sm text-ink-400">{t("performance.notComputable")}</p>
+          <p className="text-sm text-ink-400 dark:text-ink-500">{t("performance.notComputable")}</p>
         ) : (
           <p className={`font-ledger text-xl font-semibold ${PERFORMANCE_DIRECTION_CLASSES[formatPerformance(annualizedPercentage).direction]}`}>
             {formatPerformance(annualizedPercentage).label}

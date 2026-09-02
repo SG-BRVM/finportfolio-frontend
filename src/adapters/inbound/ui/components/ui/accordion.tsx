@@ -10,7 +10,7 @@ export const AccordionItem = forwardRef<
   ElementRef<typeof AccordionPrimitive.Item>,
   ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
 >(({ className, ...props }, ref) => (
-  <AccordionPrimitive.Item ref={ref} className={cn("border-b border-ink-100", className)} {...props} />
+  <AccordionPrimitive.Item ref={ref} className={cn("border-b border-ink-100 dark:border-ink-800", className)} {...props} />
 ));
 AccordionItem.displayName = "AccordionItem";
 
@@ -22,14 +22,14 @@ export const AccordionTrigger = forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex flex-1 items-center justify-between py-3 text-sm font-medium text-ink-800 transition-all",
+        "flex flex-1 items-center justify-between py-3 text-sm font-medium text-ink-800 dark:text-ink-100 transition-all",
         "hover:text-brand-700 [&[data-state=open]>svg]:rotate-180",
         className,
       )}
       {...props}
     >
       {children}
-      <ChevronDown className="h-4 w-4 shrink-0 text-ink-400 transition-transform duration-200" />
+      <ChevronDown className="h-4 w-4 shrink-0 text-ink-400 dark:text-ink-500 transition-transform duration-200" />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ));
@@ -41,7 +41,7 @@ export const AccordionContent = forwardRef<
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Content
     ref={ref}
-    className="overflow-hidden text-sm text-ink-500 data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+    className="overflow-hidden text-sm text-ink-500 dark:text-ink-400 data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
     {...props}
   >
     <div className={cn("pb-3", className)}>{children}</div>

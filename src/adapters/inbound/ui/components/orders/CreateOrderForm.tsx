@@ -122,7 +122,7 @@ export function CreateOrderForm({ defaultPortfolioId, onCreated, onDone }: Creat
 
   return (
     <>
-      <form onSubmit={requestConfirmation} noValidate className="space-y-4 rounded-xl border border-ink-100 bg-white p-5">
+      <form onSubmit={requestConfirmation} noValidate className="space-y-4 rounded-xl border border-ink-100 dark:border-ink-800 bg-white dark:bg-ink-900 p-5">
         <div>
           <Controller
             name="portfolioId"
@@ -225,16 +225,16 @@ export function CreateOrderForm({ defaultPortfolioId, onCreated, onDone }: Creat
         </div>
 
         {summary && (
-          <div className="space-y-2 rounded-lg border border-ink-100 bg-ink-50/60 p-4 text-sm">
-            <div className="flex items-center justify-between text-ink-500">
+          <div className="space-y-2 rounded-lg border border-ink-100 dark:border-ink-800 bg-ink-50/60 p-4 text-sm">
+            <div className="flex items-center justify-between text-ink-500 dark:text-ink-400">
               <span>{t("orders.form.estimatedAmount")}</span>
-              <span className="font-ledger text-ink-800">{summary.estimatedAmount.format()}</span>
+              <span className="font-ledger text-ink-800 dark:text-ink-100">{summary.estimatedAmount.format()}</span>
             </div>
-            <div className="flex items-center justify-between text-ink-500">
+            <div className="flex items-center justify-between text-ink-500 dark:text-ink-400">
               <span>{t("orders.form.fees")}</span>
-              <span className="font-ledger text-ink-800">{summary.fees.format()}</span>
+              <span className="font-ledger text-ink-800 dark:text-ink-100">{summary.fees.format()}</span>
             </div>
-            <div className="flex items-center justify-between border-t border-ink-200 pt-2 font-semibold text-ink-900">
+            <div className="flex items-center justify-between border-t border-ink-200 dark:border-ink-700 pt-2 font-semibold text-ink-900 dark:text-ink-50">
               <span>{t("orders.form.totalAmount")}</span>
               <span className="font-ledger">{summary.total.format()}</span>
             </div>

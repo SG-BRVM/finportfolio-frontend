@@ -11,7 +11,7 @@ export const ToggleGroup = forwardRef<
   <ToggleGroupPrimitive.Root
     ref={ref}
     className={cn(
-      "inline-flex w-full items-center gap-1 rounded-lg border border-ink-200 bg-ink-50 p-1",
+      "inline-flex w-full items-center gap-1 rounded-lg border border-ink-200 dark:border-ink-700 bg-ink-50 dark:bg-ink-800 p-1",
       className,
     )}
     {...props}
@@ -20,7 +20,7 @@ export const ToggleGroup = forwardRef<
 ToggleGroup.displayName = ToggleGroupPrimitive.Root.displayName;
 
 const toggleItemVariants = cva(
-  "flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-semibold tracking-wide text-ink-500 transition data-[state=on]:text-white",
+  "flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-semibold tracking-wide text-ink-500 dark:text-ink-400 transition data-[state=on]:text-white",
   {
     variants: {
       tone: {

@@ -42,7 +42,7 @@ export function InvestorForm({ onCreated }: InvestorFormProps) {
   });
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-4 rounded-xl border border-ink-100 bg-white p-5">
+    <form onSubmit={onSubmit} noValidate className="space-y-4 rounded-xl border border-ink-100 dark:border-ink-800 bg-white dark:bg-ink-900 p-5">
       <div>
         <Label htmlFor="investor-name">{t("common.name")}</Label>
         <Input id="investor-name" {...register("name")} type="text" placeholder="Adama Coulibaly" />

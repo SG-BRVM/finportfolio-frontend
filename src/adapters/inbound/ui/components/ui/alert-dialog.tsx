@@ -29,7 +29,7 @@ export const AlertDialogContent = forwardRef<
     <AlertDialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white p-5 shadow-xl animate-content-in",
+        "fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white dark:bg-ink-900 p-5 shadow-xl animate-content-in",
         className,
       )}
       {...props}
@@ -52,7 +52,7 @@ export const AlertDialogTitle = forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Title
     ref={ref}
-    className={cn("text-base font-semibold text-ink-900", className)}
+    className={cn("text-base font-semibold text-ink-900 dark:text-ink-50", className)}
     {...props}
   />
 ));
@@ -64,7 +64,7 @@ export const AlertDialogDescription = forwardRef<
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-ink-500", className)}
+    className={cn("text-sm text-ink-500 dark:text-ink-400", className)}
     {...props}
   />
 ));

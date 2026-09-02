@@ -40,7 +40,7 @@ function NominalValueCell({ instrument }: { instrument: FinancialInstrument }) {
       <button
         type="button"
         onClick={startEditing}
-        className="group inline-flex items-center gap-1.5 font-ledger text-ink-700 hover:text-brand-700"
+        className="group inline-flex items-center gap-1.5 font-ledger text-ink-700 dark:text-ink-200 hover:text-brand-700"
         title={t("instruments.table.editNominalValue")}
       >
         {instrument.nominalValue ? instrument.nominalValue.format() : "-"}
@@ -62,7 +62,7 @@ function NominalValueCell({ instrument }: { instrument: FinancialInstrument }) {
             if (e.key === "Enter") submit();
             if (e.key === "Escape") cancel();
           }}
-          className="w-24 rounded-lg border border-ink-200 px-2 py-1 font-ledger text-sm focus:border-brand-400"
+          className="bg-white dark:bg-ink-900 text-ink-800 dark:text-ink-100 w-24 rounded-lg border border-ink-200 dark:border-ink-700 px-2 py-1 font-ledger text-sm focus:border-brand-400"
         />
         <button
           type="button"
@@ -76,7 +76,7 @@ function NominalValueCell({ instrument }: { instrument: FinancialInstrument }) {
         <button
           type="button"
           onClick={cancel}
-          className="rounded-md bg-ink-100 p-1 text-ink-600 transition hover:bg-ink-200"
+          className="rounded-md bg-ink-100 dark:bg-ink-800 p-1 text-ink-600 dark:text-ink-300 transition hover:bg-ink-200"
           title={t("common.cancel")}
         >
           <X className="h-3.5 w-3.5" />
@@ -114,10 +114,10 @@ export function InstrumentsTable({ instruments }: { instruments: FinancialInstru
       {/* Le scroll de la liste est contenu ici (max-h + overflow-y-auto),
           plutôt que de laisser toute la page défiler : l'en-tête reste
           visible (sticky) pendant qu'on parcourt les instruments. */}
-      <div className="flex max-h-[calc(100vh-15rem)] flex-col overflow-hidden rounded-xl border border-ink-100 bg-white">
+      <div className="flex max-h-[calc(100vh-15rem)] flex-col overflow-hidden rounded-xl border border-ink-100 dark:border-ink-800 bg-white dark:bg-ink-900">
         <div className="scrollbar-thin flex-1 overflow-y-auto">
           <table className="w-full text-left text-sm">
-            <thead className="sticky top-0 z-10 border-b border-ink-100 bg-ink-50/95 text-xs uppercase tracking-wide text-ink-400 backdrop-blur">
+            <thead className="sticky top-0 z-10 border-b border-ink-100 dark:border-ink-800 bg-ink-50/95 text-xs uppercase tracking-wide text-ink-400 dark:text-ink-500 backdrop-blur">
               <tr>
                 <th className="px-4 py-3 font-medium">{t("instruments.form.symbol")}</th>
                 <th className="px-4 py-3 font-medium">{t("common.name")}</th>
@@ -128,28 +128,28 @@ export function InstrumentsTable({ instruments }: { instruments: FinancialInstru
                 <th className="w-8 px-2 py-3" aria-hidden />
               </tr>
             </thead>
-            <tbody className="divide-y divide-ink-100">
+            <tbody className="divide-y divide-ink-100 dark:divide-ink-800">
               {instruments.map((instrument) => (
                 <tr
                   key={instrument.id}
                   onClick={() => openDetail(instrument)}
-                  className="cursor-pointer transition hover:bg-brand-50/40"
+                  className="cursor-pointer transition hover:bg-brand-50/40 dark:hover:bg-ink-800/60"
                 >
-                  <td className="px-4 py-3 font-ledger font-semibold text-ink-900">
+                  <td className="px-4 py-3 font-ledger font-semibold text-ink-900 dark:text-ink-50">
                     {instrument.symbol}
                   </td>
-                  <td className="px-4 py-3 text-ink-700">{instrument.name}</td>
+                  <td className="px-4 py-3 text-ink-700 dark:text-ink-200">{instrument.name}</td>
                   <td className="px-4 py-3">
                     <InstrumentTypeBadge type={instrument.instrumentType} />
                   </td>
-                  <td className="px-4 py-3 font-ledger text-ink-500">{instrument.currency}</td>
-                  <td className="px-4 py-3 font-ledger text-ink-700">
+                  <td className="px-4 py-3 font-ledger text-ink-500 dark:text-ink-400">{instrument.currency}</td>
+                  <td className="px-4 py-3 font-ledger text-ink-700 dark:text-ink-200">
                     {instrument.currentPrice.format()}
                   </td>
                   <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                     <NominalValueCell instrument={instrument} />
                   </td>
-                  <td className="px-2 py-3 text-ink-300">
+                  <td className="px-2 py-3 text-ink-300 dark:text-ink-600">
                     <ChevronRight className="h-4 w-4" />
                   </td>
                 </tr>

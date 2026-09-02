@@ -8,7 +8,7 @@ const alertVariants = cva(
   {
     variants: {
       variant: {
-        default: "border-ink-100 bg-white text-ink-700 [&>svg]:text-ink-400",
+        default: "border-ink-100 dark:border-ink-800 bg-white dark:bg-ink-900 text-ink-700 dark:text-ink-200 [&>svg]:text-ink-400 dark:text-ink-500",
         brand: "border-brand-100 bg-brand-50 text-brand-800 [&>svg]:text-brand-600",
         success: "border-emerald-200 bg-emerald-50 text-emerald-800 [&>svg]:text-emerald-600",
         warning: "border-amber-200 bg-amber-50 text-amber-800 [&>svg]:text-amber-600",

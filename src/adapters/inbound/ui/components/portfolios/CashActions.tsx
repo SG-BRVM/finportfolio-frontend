@@ -86,7 +86,7 @@ export function CashActions({ portfolio }: { portfolio: Portfolio }) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              t(mode === "deposit" ? "portfolios.cash.depositTitle" : "portfolios.cash.withdrawTitle")
+              {t(mode === "deposit" ? "portfolios.cash.depositTitle" : "portfolios.cash.withdrawTitle")}
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={onSubmit} noValidate className="space-y-4">
@@ -98,7 +98,7 @@ export function CashActions({ portfolio }: { portfolio: Portfolio }) {
                 inputMode="decimal"
                 placeholder="10000.00"
                 autoFocus
-                className="w-full rounded-lg border border-ink-200 px-3 py-2 font-ledger text-sm focus:border-brand-400"
+                className="bg-white dark:bg-ink-900 text-ink-800 dark:text-ink-100 w-full rounded-lg border border-ink-200 dark:border-ink-700 px-3 py-2 font-ledger text-sm focus:border-brand-400"
               />
               {errors.amount && (
                 <p className="mt-1 text-xs text-rose-600">{errors.amount.message}</p>

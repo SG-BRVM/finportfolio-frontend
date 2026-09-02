@@ -17,7 +17,7 @@ export const PopoverContent = forwardRef<
       align={align}
       sideOffset={sideOffset}
       className={cn(
-        "z-50 max-h-56 overflow-auto rounded-lg border border-ink-200 bg-white text-sm shadow-lg outline-none animate-content-in",
+        "z-50 max-h-56 overflow-auto rounded-lg border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900 text-sm shadow-lg outline-none animate-content-in",
         "w-[var(--radix-popover-trigger-width)]",
         className,
       )}

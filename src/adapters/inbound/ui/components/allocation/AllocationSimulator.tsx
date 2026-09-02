@@ -171,10 +171,10 @@ export function AllocationSimulator() {
         <div>
           <div className="mb-2 flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-ink-800">
+              <p className="text-sm font-semibold text-ink-800 dark:text-ink-100">
                 {t("allocation.simulator.instrumentsToInclude")}
               </p>
-              <p className="text-xs text-ink-400">
+              <p className="text-xs text-ink-400 dark:text-ink-500">
                 {t("allocation.simulator.instrumentsToIncludeDescription", {
                   selected: selectedCount,
                   total: instrumentsInCurrency.length,
@@ -223,8 +223,8 @@ export function AllocationSimulator() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <span className="font-medium text-ink-900">{instrument.symbol}</span>
-                      <span className="text-ink-400">{instrument.name}</span>
+                      <span className="font-medium text-ink-900 dark:text-ink-50">{instrument.symbol}</span>
+                      <span className="text-ink-400 dark:text-ink-500">{instrument.name}</span>
                       <InstrumentTypeBadge type={instrument.instrumentType} />
                     </div>
                   </TableCell>
@@ -233,7 +233,7 @@ export function AllocationSimulator() {
                   </TableCell>
                   <TableCell className="text-right">
                     {strategy === "EQUAL" ? (
-                      <span className="font-ledger text-ink-600">
+                      <span className="font-ledger text-ink-600 dark:text-ink-300">
                         {checked ? formatPercentage(equalWeightPercent, { forceSign: false, decimals: 1 }) : "-"}
                       </span>
                     ) : (
@@ -262,7 +262,7 @@ export function AllocationSimulator() {
       )}
 
       <div className="flex items-center justify-between">
-        <p className="text-xs text-ink-400">
+        <p className="text-xs text-ink-400 dark:text-ink-500">
           {t(strategy === "CUSTOM"
             ? "allocation.simulator.customWeightsHint"
             : "allocation.simulator.equalWeightsHint")}
@@ -280,7 +280,7 @@ export function AllocationSimulator() {
       )}
 
       {result && (
-        <div className="space-y-3 border-t border-ink-100 pt-5">
+        <div className="space-y-3 border-t border-ink-100 dark:border-ink-800 pt-5">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <SummaryStat label={t("allocation.simulator.capital")} value={result.capital.format()} />
             <SummaryStat label={t("allocation.simulator.invested")} value={result.investedAmount.format()} />
@@ -307,23 +307,23 @@ export function AllocationSimulator() {
                 <TableRow key={line.instrumentId}>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <span className="font-medium text-ink-900">{line.symbol}</span>
-                      <span className="text-ink-400">{line.name}</span>
+                      <span className="font-medium text-ink-900 dark:text-ink-50">{line.symbol}</span>
+                      <span className="text-ink-400 dark:text-ink-500">{line.name}</span>
                     </div>
                   </TableCell>
                   <TableCell className="text-right font-ledger">
                     {line.currentPrice.format()}
                   </TableCell>
-                  <TableCell className="text-right font-ledger text-ink-500">
+                  <TableCell className="text-right font-ledger text-ink-500 dark:text-ink-400">
                     {formatPercentage(line.targetWeightPercent, { forceSign: false, decimals: 1 })}
                   </TableCell>
-                  <TableCell className="text-right font-ledger font-semibold text-ink-900">
+                  <TableCell className="text-right font-ledger font-semibold text-ink-900 dark:text-ink-50">
                     {line.quantity}
                   </TableCell>
                   <TableCell className="text-right font-ledger">
                     {line.investedAmount.format()}
                   </TableCell>
-                  <TableCell className="text-right font-ledger text-ink-500">
+                  <TableCell className="text-right font-ledger text-ink-500 dark:text-ink-400">
                     {formatPercentage(line.actualWeightPercent, { forceSign: false, decimals: 1 })}
                   </TableCell>
                 </TableRow>
@@ -339,8 +339,8 @@ export function AllocationSimulator() {
 function SummaryStat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg bg-ink-50/60 px-3 py-2.5">
-      <p className="text-xs font-medium uppercase tracking-wide text-ink-400">{label}</p>
-      <p className="font-ledger text-base font-semibold text-ink-900">{value}</p>
+      <p className="text-xs font-medium uppercase tracking-wide text-ink-400 dark:text-ink-500">{label}</p>
+      <p className="font-ledger text-base font-semibold text-ink-900 dark:text-ink-50">{value}</p>
     </div>
   );
 }

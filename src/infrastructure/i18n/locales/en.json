@@ -216,6 +216,8 @@
     "notifications": "Notifications",
     "noNotifications": "No notifications yet.",
     "seeAllAlerts": "See all alerts",
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode",
     "myAccount": "My account",
     "status": {
       "checking": "Checking services…",

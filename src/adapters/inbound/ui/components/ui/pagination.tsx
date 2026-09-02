@@ -70,7 +70,7 @@ export function PaginationEllipsis({ className, ...props }: ComponentPropsWithou
   return (
     <span
       aria-hidden
-      className={cn("flex h-8 w-8 items-center justify-center text-ink-400", className)}
+      className={cn("flex h-8 w-8 items-center justify-center text-ink-400 dark:text-ink-500", className)}
       {...props}
     >
       <MoreHorizontal className="h-4 w-4" />

@@ -27,7 +27,7 @@ export const Progress = forwardRef<ElementRef<typeof ProgressPrimitive.Root>, Pr
   ({ className, value, tone, ...props }, ref) => (
     <ProgressPrimitive.Root
       ref={ref}
-      className={cn("h-2 w-full overflow-hidden rounded-full bg-ink-100", className)}
+      className={cn("h-2 w-full overflow-hidden rounded-full bg-ink-100 dark:bg-ink-800", className)}
       {...props}
     >
       <ProgressPrimitive.Indicator

@@ -64,15 +64,15 @@ export function InstrumentForm() {
   });
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-4 rounded-xl border border-ink-100 bg-white p-5">
+    <form onSubmit={onSubmit} noValidate className="space-y-4 rounded-xl border border-ink-100 dark:border-ink-800 bg-white dark:bg-ink-900 p-5">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-ink-700">{t("instruments.form.symbol")}</label>
+          <label className="mb-1 block text-sm font-medium text-ink-700 dark:text-ink-200">{t("instruments.form.symbol")}</label>
           <input
             {...register("symbol")}
             type="text"
             placeholder="SNTS"
-            className="w-full rounded-lg border border-ink-200 px-3 py-2 font-ledger text-sm uppercase focus:border-brand-400"
+            className="bg-white dark:bg-ink-900 text-ink-800 dark:text-ink-100 w-full rounded-lg border border-ink-200 dark:border-ink-700 px-3 py-2 font-ledger text-sm uppercase focus:border-brand-400"
           />
           {errors.symbol && <p className="mt-1 text-xs text-rose-600">{errors.symbol.message}</p>}
         </div>
@@ -99,37 +99,37 @@ export function InstrumentForm() {
         </div>
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium text-ink-700">{t("common.name")}</label>
+        <label className="mb-1 block text-sm font-medium text-ink-700 dark:text-ink-200">{t("common.name")}</label>
         <input
           {...register("name")}
           type="text"
           placeholder="Sonatel"
-          className="w-full rounded-lg border border-ink-200 px-3 py-2 text-sm focus:border-brand-400"
+          className="bg-white dark:bg-ink-900 text-ink-800 dark:text-ink-100 w-full rounded-lg border border-ink-200 dark:border-ink-700 px-3 py-2 text-sm focus:border-brand-400"
         />
         {errors.name && <p className="mt-1 text-xs text-rose-600">{errors.name.message}</p>}
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-ink-700">{t("common.currency")}</label>
+          <label className="mb-1 block text-sm font-medium text-ink-700 dark:text-ink-200">{t("common.currency")}</label>
           <input
             {...register("currency")}
             type="text"
             maxLength={3}
             placeholder="XOF"
-            className="w-full rounded-lg border border-ink-200 px-3 py-2 font-ledger text-sm uppercase focus:border-brand-400"
+            className="bg-white dark:bg-ink-900 text-ink-800 dark:text-ink-100 w-full rounded-lg border border-ink-200 dark:border-ink-700 px-3 py-2 font-ledger text-sm uppercase focus:border-brand-400"
           />
           {errors.currency && (
             <p className="mt-1 text-xs text-rose-600">{errors.currency.message}</p>
           )}
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-ink-700">{t("portfolios.positions.currentPrice")}</label>
+          <label className="mb-1 block text-sm font-medium text-ink-700 dark:text-ink-200">{t("portfolios.positions.currentPrice")}</label>
           <input
             {...register("currentPrice")}
             type="text"
             inputMode="decimal"
             placeholder="12500"
-            className="w-full rounded-lg border border-ink-200 px-3 py-2 font-ledger text-sm focus:border-brand-400"
+            className="bg-white dark:bg-ink-900 text-ink-800 dark:text-ink-100 w-full rounded-lg border border-ink-200 dark:border-ink-700 px-3 py-2 font-ledger text-sm focus:border-brand-400"
           />
           {errors.currentPrice && (
             <p className="mt-1 text-xs text-rose-600">{errors.currentPrice.message}</p>
@@ -137,15 +137,15 @@ export function InstrumentForm() {
         </div>
       </div>
       <div>
-        <label className="mb-1 block text-sm font-medium text-ink-700">
-          {t("instruments.form.nominalValue")} <span className="font-normal text-ink-400">({t("common.optional")})</span>
+        <label className="mb-1 block text-sm font-medium text-ink-700 dark:text-ink-200">
+          {t("instruments.form.nominalValue")} <span className="font-normal text-ink-400 dark:text-ink-500">({t("common.optional")})</span>
         </label>
         <input
           {...register("nominalValue")}
           type="text"
           inputMode="decimal"
           placeholder="10000"
-          className="w-full rounded-lg border border-ink-200 px-3 py-2 font-ledger text-sm focus:border-brand-400"
+          className="bg-white dark:bg-ink-900 text-ink-800 dark:text-ink-100 w-full rounded-lg border border-ink-200 dark:border-ink-700 px-3 py-2 font-ledger text-sm focus:border-brand-400"
         />
         {errors.nominalValue && (
           <p className="mt-1 text-xs text-rose-600">{errors.nominalValue.message}</p>
@@ -153,7 +153,7 @@ export function InstrumentForm() {
       </div>
       <div>
         <Label>
-          {t("instruments.form.sector")} <span className="font-normal text-ink-400">({t("common.optional")})</span>
+          {t("instruments.form.sector")} <span className="font-normal text-ink-400 dark:text-ink-500">({t("common.optional")})</span>
         </Label>
         <Controller
           name="sector"

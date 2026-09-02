@@ -18,7 +18,7 @@ export const DropdownMenuSubTrigger = forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      "flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm text-ink-700 outline-none",
+      "flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm text-ink-700 dark:text-ink-200 outline-none",
       "focus:bg-brand-50 focus:text-brand-700 data-[state=open]:bg-brand-50",
       inset && "pl-8",
       className,
@@ -38,7 +38,7 @@ export const DropdownMenuSubContent = forwardRef<
   <DropdownMenuPrimitive.SubContent
     ref={ref}
     className={cn(
-      "z-50 min-w-[10rem] overflow-hidden rounded-lg border border-ink-200 bg-white p-1 text-sm shadow-lg animate-content-in",
+      "z-50 min-w-[10rem] overflow-hidden rounded-lg border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900 p-1 text-sm shadow-lg animate-content-in",
       className,
     )}
     {...props}
@@ -56,7 +56,7 @@ export const DropdownMenuContent = forwardRef<
       sideOffset={sideOffset}
       align={align}
       className={cn(
-        "z-50 min-w-[12rem] overflow-hidden rounded-lg border border-ink-200 bg-white p-1 text-sm shadow-lg animate-content-in",
+        "z-50 min-w-[12rem] overflow-hidden rounded-lg border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900 p-1 text-sm shadow-lg animate-content-in",
         className,
       )}
       {...props}
@@ -78,7 +78,7 @@ export const DropdownMenuItem = forwardRef<
       "flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-none transition-colors",
       variant === "destructive"
         ? "text-rose-600 focus:bg-rose-50 focus:text-rose-700"
-        : "text-ink-700 focus:bg-brand-50 focus:text-brand-700",
+        : "text-ink-700 dark:text-ink-200 focus:bg-brand-50 focus:text-brand-700",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       inset && "pl-8",
       className,
@@ -96,7 +96,7 @@ export const DropdownMenuCheckboxItem = forwardRef<
     ref={ref}
     checked={checked}
     className={cn(
-      "relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2 text-sm text-ink-700 outline-none",
+      "relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2 text-sm text-ink-700 dark:text-ink-200 outline-none",
       "focus:bg-brand-50 focus:text-brand-700 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
@@ -119,7 +119,7 @@ export const DropdownMenuRadioItem = forwardRef<
   <DropdownMenuPrimitive.RadioItem
     ref={ref}
     className={cn(
-      "relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2 text-sm text-ink-700 outline-none",
+      "relative flex cursor-pointer select-none items-center gap-2 rounded-md py-1.5 pl-8 pr-2 text-sm text-ink-700 dark:text-ink-200 outline-none",
       "focus:bg-brand-50 focus:text-brand-700 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className,
     )}
@@ -142,7 +142,7 @@ export const DropdownMenuLabel = forwardRef<
   <DropdownMenuPrimitive.Label
     ref={ref}
     className={cn(
-      "px-2 py-1.5 text-xs font-semibold uppercase tracking-wide text-ink-400",
+      "px-2 py-1.5 text-xs font-semibold uppercase tracking-wide text-ink-400 dark:text-ink-500",
       inset && "pl-8",
       className,
     )}
@@ -155,10 +155,10 @@ export const DropdownMenuSeparator = forwardRef<
   ElementRef<typeof DropdownMenuPrimitive.Separator>,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
 >(({ className, ...props }, ref) => (
-  <DropdownMenuPrimitive.Separator ref={ref} className={cn("my-1 h-px bg-ink-100", className)} {...props} />
+  <DropdownMenuPrimitive.Separator ref={ref} className={cn("my-1 h-px bg-ink-100 dark:bg-ink-800", className)} {...props} />
 ));
 DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
 
 export function DropdownMenuShortcut({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
-  return <span className={cn("ml-auto text-xs tracking-widest text-ink-300", className)} {...props} />;
+  return <span className={cn("ml-auto text-xs tracking-widest text-ink-300 dark:text-ink-600", className)} {...props} />;
 }

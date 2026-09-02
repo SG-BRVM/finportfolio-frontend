@@ -22,7 +22,7 @@ export const SheetOverlay = forwardRef<
 ));
 SheetOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
-const sheetVariants = cva("fixed z-50 flex flex-col bg-white shadow-xl", {
+const sheetVariants = cva("fixed z-50 flex flex-col bg-white dark:bg-ink-900 shadow-xl", {
   variants: {
     side: {
       // "Drawer" mobile (nav, actions rapides) - glisse depuis le bas.
@@ -52,7 +52,7 @@ export const SheetContent = forwardRef<ElementRef<typeof DialogPrimitive.Content
       >
         {children}
         {!hideClose && (
-          <DialogPrimitive.Close className="absolute right-4 top-4 text-ink-400 transition hover:text-ink-600">
+          <DialogPrimitive.Close className="absolute right-4 top-4 text-ink-400 dark:text-ink-500 transition hover:text-ink-600 dark:hover:text-ink-300">
             <X className="h-4 w-4" />
             <span className="sr-only">Fermer</span>
           </DialogPrimitive.Close>
@@ -64,18 +64,18 @@ export const SheetContent = forwardRef<ElementRef<typeof DialogPrimitive.Content
 SheetContent.displayName = DialogPrimitive.Content.displayName;
 
 export function SheetHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("border-b border-ink-100 p-5", className)} {...props} />;
+  return <div className={cn("border-b border-ink-100 dark:border-ink-800 p-5", className)} {...props} />;
 }
 
 export function SheetFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("mt-auto flex justify-end gap-2 border-t border-ink-100 p-5", className)} {...props} />;
+  return <div className={cn("mt-auto flex justify-end gap-2 border-t border-ink-100 dark:border-ink-800 p-5", className)} {...props} />;
 }
 
 export const SheetTitle = forwardRef<
   ElementRef<typeof DialogPrimitive.Title>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Title ref={ref} className={cn("text-base font-semibold text-ink-900", className)} {...props} />
+  <DialogPrimitive.Title ref={ref} className={cn("text-base font-semibold text-ink-900 dark:text-ink-50", className)} {...props} />
 ));
 SheetTitle.displayName = DialogPrimitive.Title.displayName;
 
@@ -83,7 +83,7 @@ export const SheetDescription = forwardRef<
   ElementRef<typeof DialogPrimitive.Description>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Description ref={ref} className={cn("mt-1 text-sm text-ink-500", className)} {...props} />
+  <DialogPrimitive.Description ref={ref} className={cn("mt-1 text-sm text-ink-500 dark:text-ink-400", className)} {...props} />
 ));
 SheetDescription.displayName = DialogPrimitive.Description.displayName;
 

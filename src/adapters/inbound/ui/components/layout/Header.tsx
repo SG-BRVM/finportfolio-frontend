@@ -7,7 +7,7 @@ export function Header() {
   const isUp = !isLoading && !isError && data?.health.status === "ok";
 
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between border-b border-ink-100 bg-white px-6">
+    <header className="flex h-16 shrink-0 items-center justify-between border-b border-ink-100 bg-white px-6 dark:border-ink-800 dark:bg-ink-900">
       <div />
       <Tooltip>
         <TooltipTrigger asChild>

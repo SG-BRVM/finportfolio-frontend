@@ -65,18 +65,18 @@ export function SidebarNavigation({ onNavigate, className }: SidebarNavigationPr
                 <AccordionPrimitive.Trigger
                   className={cn(
                     "group flex w-full items-center justify-between rounded-lg px-3 py-2",
-                    "text-[11px] font-semibold uppercase tracking-wider text-ink-300 transition",
-                    "hover:bg-ink-50 hover:text-ink-500",
+                    "text-[11px] font-semibold uppercase tracking-wider text-ink-300 transition dark:text-ink-500",
+                    "hover:bg-ink-50 hover:text-ink-500 dark:hover:bg-ink-800 dark:hover:text-ink-300",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-200",
                   )}
                 >
                   <span className="flex items-center gap-2">
-                    {SectionIcon && <SectionIcon className="h-3.5 w-3.5 shrink-0 text-ink-300" aria-hidden="true" />}
+                    {SectionIcon && <SectionIcon className="h-3.5 w-3.5 shrink-0 text-ink-300 dark:text-ink-500" aria-hidden="true" />}
                     {t(group.labelKey!)}
                   </span>
                   <ChevronRight
                     className={cn(
-                      "h-3.5 w-3.5 shrink-0 text-ink-300 transition-transform duration-200",
+                      "h-3.5 w-3.5 shrink-0 text-ink-300 transition-transform duration-200 dark:text-ink-500",
                       "group-data-[state=open]:rotate-90",
                     )}
                     aria-hidden="true"
@@ -86,7 +86,7 @@ export function SidebarNavigation({ onNavigate, className }: SidebarNavigationPr
               <AccordionPrimitive.Content
                 className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
               >
-                <div className="space-y-0.5 border-l border-ink-100 py-0.5 pl-3">
+                <div className="space-y-0.5 border-l border-ink-100 py-0.5 pl-3 dark:border-ink-800">
                   {group.items.map((item) => (
                     <SidebarNavLink key={item.to} item={item} onNavigate={onNavigate} />
                   ))}
@@ -112,7 +112,9 @@ function SidebarNavLink({ item, onNavigate }: { item: NavItem; onNavigate?: () =
       className={({ isActive }) =>
         cn(
           "group/item flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition",
-          isActive ? "bg-brand-50 text-brand-700" : "text-ink-500 hover:bg-ink-50 hover:text-ink-800",
+          isActive
+            ? "bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300"
+            : "text-ink-500 hover:bg-ink-50 hover:text-ink-800 dark:text-ink-400 dark:hover:bg-ink-800 dark:hover:text-ink-100",
         )
       }
     >
@@ -121,7 +123,7 @@ function SidebarNavLink({ item, onNavigate }: { item: NavItem; onNavigate?: () =
           <Icon
             className={cn(
               "h-4 w-4 shrink-0",
-              isActive ? "text-brand-600" : "text-ink-400 group-hover/item:text-ink-600",
+              isActive ? "text-brand-600 dark:text-brand-400" : "text-ink-400 group-hover/item:text-ink-600 dark:group-hover/item:text-ink-200",
             )}
           />
           {t(labelKey)}

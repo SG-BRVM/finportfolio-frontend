@@ -64,8 +64,8 @@ export function SectorExposure({ positions, isLoading }: SectorExposureProps) {
       {rows.map((row) => (
         <div key={row.label}>
           <div className="mb-1.5 flex items-center justify-between text-sm">
-            <span className="text-ink-700">{row.label}</span>
-            <span className="font-ledger font-semibold text-ink-900">
+            <span className="text-ink-700 dark:text-ink-200">{row.label}</span>
+            <span className="font-ledger font-semibold text-ink-900 dark:text-ink-50">
               {formatPercentage(row.percentage, { forceSign: false, decimals: 1 })}
             </span>
           </div>

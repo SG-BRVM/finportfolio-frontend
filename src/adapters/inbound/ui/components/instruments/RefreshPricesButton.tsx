@@ -18,11 +18,11 @@ export function RefreshPricesButton() {
   const result = refreshPrices.data;
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-ink-100 bg-white p-4">
+    <div className="flex flex-col gap-3 rounded-xl border border-ink-100 dark:border-ink-800 bg-white dark:bg-ink-900 p-4">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold text-ink-900">{t("markets.brvmPrices")}</p>
-          <p className="text-xs text-ink-500">{t("markets.refreshDescription")}</p>
+          <p className="text-sm font-semibold text-ink-900 dark:text-ink-50">{t("markets.brvmPrices")}</p>
+          <p className="text-xs text-ink-500 dark:text-ink-400">{t("markets.refreshDescription")}</p>
         </div>
         <Button
           type="button"

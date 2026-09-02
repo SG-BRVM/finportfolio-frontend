@@ -24,9 +24,9 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-ink-100 bg-white">
+    <div className="overflow-hidden rounded-xl border border-ink-100 dark:border-ink-800 bg-white dark:bg-ink-900">
       <table className="w-full text-left text-sm">
-        <thead className="border-b border-ink-100 bg-ink-50/60 text-xs uppercase tracking-wide text-ink-400">
+        <thead className="border-b border-ink-100 dark:border-ink-800 bg-ink-50/60 text-xs uppercase tracking-wide text-ink-400 dark:text-ink-500">
           <tr>
             <th className="px-4 py-3 font-medium">ID</th>
             <th className="px-4 py-3 font-medium">Sens</th>
@@ -36,19 +36,19 @@ export function OrdersTable({ orders }: { orders: Order[] }) {
             <th className="px-4 py-3 font-medium">Créé le</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-ink-100">
+        <tbody className="divide-y divide-ink-100 dark:divide-ink-800">
           {orders.map((order) => (
-            <tr key={order.id} className="hover:bg-ink-50/40">
+            <tr key={order.id} className="hover:bg-ink-50/40 dark:hover:bg-ink-800/40">
               <td className="px-4 py-3">
                 <Link to={`/orders/${order.id}`} className="font-ledger text-xs text-brand-600 hover:underline">
                   {order.id.slice(0, 8)}…
                 </Link>
               </td>
               <td className="px-4 py-3"><OrderSideBadge side={order.side} /></td>
-              <td className="px-4 py-3 font-ledger text-ink-700">{formatQuantity(order.quantity)}</td>
-              <td className="px-4 py-3 font-ledger text-ink-700">{order.price.format()}</td>
+              <td className="px-4 py-3 font-ledger text-ink-700 dark:text-ink-200">{formatQuantity(order.quantity)}</td>
+              <td className="px-4 py-3 font-ledger text-ink-700 dark:text-ink-200">{order.price.format()}</td>
               <td className="px-4 py-3"><OrderStatusBadge status={order.status} /></td>
-              <td className="px-4 py-3 font-ledger text-xs text-ink-400">{formatDate(order.createdAt)}</td>
+              <td className="px-4 py-3 font-ledger text-xs text-ink-400 dark:text-ink-500">{formatDate(order.createdAt)}</td>
             </tr>
           ))}
         </tbody>

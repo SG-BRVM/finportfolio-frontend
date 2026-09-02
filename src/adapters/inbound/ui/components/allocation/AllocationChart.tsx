@@ -106,11 +106,11 @@ export function AllocationChart({ positions, isLoading }: AllocationChartProps) 
       <ul className="w-full max-w-xs space-y-2.5">
         {slices.map((slice) => (
           <li key={slice.type} className="flex items-center justify-between text-sm">
-            <span className="flex items-center gap-2 text-ink-700">
+            <span className="flex items-center gap-2 text-ink-700 dark:text-ink-200">
               <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: slice.color }} />
               {slice.label}
             </span>
-            <span className="font-ledger font-semibold text-ink-900">
+            <span className="font-ledger font-semibold text-ink-900 dark:text-ink-50">
               {formatPercentage(slice.percentage, { forceSign: false, decimals: 1 })}
             </span>
           </li>

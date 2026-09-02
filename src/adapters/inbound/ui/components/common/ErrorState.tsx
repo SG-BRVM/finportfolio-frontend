@@ -20,7 +20,7 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
       {onRetry && (
         <button
           onClick={onRetry}
-          className="mt-1 rounded-lg border border-rose-300 bg-white px-3 py-1.5 text-sm font-medium text-rose-700 transition hover:bg-rose-100"
+          className="mt-1 rounded-lg border border-rose-300 bg-white dark:bg-ink-900 px-3 py-1.5 text-sm font-medium text-rose-700 transition hover:bg-rose-100"
         >
           {t("common.retry")}
         </button>

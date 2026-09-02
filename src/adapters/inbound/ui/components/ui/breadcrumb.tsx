@@ -14,7 +14,7 @@ export const BreadcrumbList = forwardRef<HTMLOListElement, ComponentPropsWithout
   ({ className, ...props }, ref) => (
     <ol
       ref={ref}
-      className={cn("flex flex-wrap items-center gap-1.5 text-sm text-ink-400", className)}
+      className={cn("flex flex-wrap items-center gap-1.5 text-sm text-ink-400 dark:text-ink-500", className)}
       {...props}
     />
   ),
@@ -36,7 +36,7 @@ export const BreadcrumbLink = forwardRef<
   return (
     <Comp
       ref={ref}
-      className={cn("transition-colors hover:text-ink-700", className)}
+      className={cn("transition-colors hover:text-ink-700 dark:hover:text-ink-200", className)}
       {...props}
     />
   );
@@ -50,7 +50,7 @@ export const BreadcrumbPage = forwardRef<HTMLSpanElement, ComponentPropsWithoutR
       role="link"
       aria-disabled="true"
       aria-current="page"
-      className={cn("font-medium text-ink-800", className)}
+      className={cn("font-medium text-ink-800 dark:text-ink-100", className)}
       {...props}
     />
   ),

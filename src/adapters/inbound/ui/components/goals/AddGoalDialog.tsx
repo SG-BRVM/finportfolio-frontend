@@ -79,7 +79,7 @@ export function AddGoalDialog() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label>{t("goals.currentAmountLabel")} (XOF)</Label>
+              <Label className="flex min-h-[2.5rem] items-end">{t("goals.currentAmountLabel")} (XOF)</Label>
               <Input
                 type="text"
                 inputMode="decimal"
@@ -90,7 +90,7 @@ export function AddGoalDialog() {
               />
             </div>
             <div>
-              <Label>{t("goals.targetAmountLabel")} (XOF)</Label>
+              <Label className="flex min-h-[2.5rem] items-end">{t("goals.targetAmountLabel")} (XOF)</Label>
               <Input
                 type="text"
                 inputMode="decimal"
